@@ -76,15 +76,12 @@ jobs:
           VERSION="${{ github.event.inputs.version }}"
           sed -i 's/"version": "[^"]*"/"version": "'$VERSION'"/' src-tauri/tauri.conf.json
 
-      - name: Create .env file
-        run: |
-          echo "DEVICE_MAC=${{ secrets.DEVICE_MAC }}" > .env
-          echo "BROADCAST_ADDR=${{ secrets.BROADCAST_ADDR }}" >> .env
-
       - name: Build APK
         run: pnpm tauri android build --apk --target aarch64
         env:
           TAURI_CI: "1"
+          DEVICE_MAC: ${{ secrets.DEVICE_MAC }}
+          BROADCAST_ADDR: ${{ secrets.BROADCAST_ADDR }}
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
