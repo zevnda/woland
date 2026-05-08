@@ -82,7 +82,7 @@ jobs:
           echo "BROADCAST_ADDR=${{ secrets.BROADCAST_ADDR }}" >> .env
 
       - name: Build APK
-        run: pnpm tauri android build --release
+        run: pnpm tauri android build --apk --target aarch64
         env:
           TAURI_CI: "1"
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
