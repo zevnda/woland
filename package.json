@@ -12,6 +12,9 @@
     "tabd": "pnpm tauri android build --apk --debug",
     "tad": "pnpm tauri android dev"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  },
   "dependencies": {
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
