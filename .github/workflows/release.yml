@@ -1,0 +1,121 @@
+name: Build APK Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version number (e.g., 0.1.0)"
+        required: true
+        type: string
+
+run-name: Build release v${{ github.event.inputs.version }}
+
+permissions:
+  contents: write
+
+jobs:
+  build_apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: latest
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android
+
+      - name: Setup Android NDK
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r26b
+          add-to-path: true
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Setup Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.OS }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.OS }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup keystore for signing
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > ~/.woland.keystore
+          chmod 600 ~/.woland.keystore
+
+      - name: Update version in tauri.conf.json
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          sed -i 's/"version": "[^"]*"/"version": "'$VERSION'"/' src-tauri/tauri.conf.json
+
+      - name: Create .env file
+        run: |
+          echo "DEVICE_MAC=${{ secrets.DEVICE_MAC }}" > .env
+          echo "BROADCAST_ADDR=${{ secrets.BROADCAST_ADDR }}" >> .env
+
+      - name: Build APK
+        run: pnpm tauri android build --release
+        env:
+          TAURI_CI: "1"
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: Rename APK
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          APK_PATH="src-tauri/gen/android/app/build/outputs/apk/universal/release"
+          OLD_APK="$APK_PATH/app-universal-release.apk"
+          NEW_APK="$APK_PATH/WoLAnd-$VERSION.apk"
+          
+          if [ -f "$OLD_APK" ]; then
+            mv "$OLD_APK" "$NEW_APK"
+            echo "APK renamed to WoLAnd-$VERSION.apk"
+          else
+            echo "Error: APK not found at $OLD_APK"
+            exit 1
+          fi
+
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          name: WoLAnd v${{ github.event.inputs.version }}
+          body: |
+            Release v${{ github.event.inputs.version }}
+            
+            Android APK ready for distribution
+          files: |
+            src-tauri/gen/android/app/build/outputs/apk/universal/release/WoLAnd-${{ github.event.inputs.version }}.apk
+          draft: false
+          prerelease: false

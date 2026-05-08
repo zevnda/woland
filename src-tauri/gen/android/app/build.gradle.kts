@@ -27,9 +27,9 @@ android {
     signingConfigs {
         create("release") {
             storeFile = file("${System.getProperty("user.home")}/woland.keystore")
-            storePassword = "abc123"
-            keyAlias = "woland"
-            keyPassword = "abc123"
+            storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD") ?: "abc123"
+            keyAlias = System.getenv("ANDROID_KEY_ALIAS") ?: "woland"
+            keyPassword = System.getenv("ANDROID_KEY_PASSWORD") ?: "abc123"
         }
     }
     buildTypes {
