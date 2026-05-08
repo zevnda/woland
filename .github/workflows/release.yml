@@ -68,8 +68,8 @@ jobs:
 
       - name: Setup keystore for signing
         run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > ~/.woland.keystore
-          chmod 600 ~/.woland.keystore
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > ~/woland.keystore
+          chmod 600 ~/woland.keystore
 
       - name: Update version in tauri.conf.json
         run: |
