@@ -110,8 +110,6 @@ jobs:
           name: WoLAnd v${{ github.event.inputs.version }}
           body: |
             Release v${{ github.event.inputs.version }}
-            
-            Android APK ready for distribution
           files: |
             src-tauri/gen/android/app/build/outputs/apk/universal/release/WoLAnd-${{ github.event.inputs.version }}.apk
           draft: false
