@@ -80,8 +80,6 @@ jobs:
         run: pnpm tauri android build --apk --target aarch64
         env:
           TAURI_CI: "1"
-          DEVICE_MAC: ${{ secrets.DEVICE_MAC }}
-          BROADCAST_ADDR: ${{ secrets.BROADCAST_ADDR }}
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
@@ -108,8 +106,6 @@ jobs:
         with:
           tag_name: v${{ github.event.inputs.version }}
           name: WoLAnd v${{ github.event.inputs.version }}
-          body: |
-            Release v${{ github.event.inputs.version }}
           files: |
             src-tauri/gen/android/app/build/outputs/apk/universal/release/WoLAnd-${{ github.event.inputs.version }}.apk
           draft: false

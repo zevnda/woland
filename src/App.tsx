@@ -1,34 +1,96 @@
-import { invoke } from '@tauri-apps/api/core'
+import { useState, useEffect, useCallback } from 'react'
+import type { Device, Screen } from './lib/types'
+import { loadDevices, saveDevices, loadSelectedId, saveSelectedId } from './lib/storage'
+import DeviceList from './components/DeviceList'
+import DeviceForm from './components/DeviceForm'
+import PowerScreen from './components/PowerScreen'
 
-function App() {
-  async function sendWOL() {
-    try {
-      const result = await invoke<string>('send_wake_on_lan')
-      console.log(result)
-    } catch (error) {
-      console.error(error)
+export default function App() {
+  const [devices, setDevices] = useState<Device[]>(loadDevices)
+  const [selectedId, setSelectedId] = useState<string | null>(loadSelectedId)
+  const [screen, setScreen] = useState<Screen>('devices')
+  const [editingDevice, setEditingDevice] = useState<Device | null>(null)
+
+  // Restore last screen on mount
+  useEffect(() => {
+    const devs = loadDevices()
+    const selId = loadSelectedId()
+    if (selId && devs.find(d => d.id === selId)) {
+      setScreen('power')
+    } else {
+      setScreen('devices')
     }
+  }, [])
+
+  const selectedDevice = devices.find(d => d.id === selectedId) || null
+
+  const handleSelectDevice = useCallback((id: string) => {
+    setSelectedId(id)
+    saveSelectedId(id)
+    setScreen('power')
+  }, [])
+
+  const handleSaveDevice = useCallback((device: Device) => {
+    setDevices(prev => {
+      const exists = prev.find(d => d.id === device.id)
+      const next = exists ? prev.map(d => (d.id === device.id ? device : d)) : [...prev, device]
+      saveDevices(next)
+      return next
+    })
+    setEditingDevice(null)
+    setScreen('devices')
+  }, [])
+
+  const handleDeleteDevice = useCallback(
+    (id: string) => {
+      setDevices(prev => {
+        const next = prev.filter(d => d.id !== id)
+        saveDevices(next)
+        return next
+      })
+      if (selectedId === id) {
+        setSelectedId(null)
+        saveSelectedId(null)
+      }
+    },
+    [selectedId],
+  )
+
+  if (screen === 'form') {
+    return (
+      <DeviceForm
+        device={editingDevice}
+        onSave={handleSaveDevice}
+        onCancel={() => {
+          setEditingDevice(null)
+          setScreen('devices')
+        }}
+      />
+    )
   }
 
-  return (
-    <main className='app-container'>
-      <div className='button-wrapper'>
-        <div className='power-button' onClick={sendWOL} title='Send Wake-on-LAN packet'>
-          <svg
-            viewBox='0 0 24 24'
-            fill='none'
-            stroke='currentColor'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          >
-            <path d='M18.36 6.64a9 9 0 1 1-12.73 0'></path>
-            <line x1='12' y1='2' x2='12' y2='12'></line>
-          </svg>
-        </div>
-      </div>
-    </main>
-  )
-}
+  if (screen === 'devices') {
+    return (
+      <DeviceList
+        devices={devices}
+        selectedId={selectedId}
+        onSelect={handleSelectDevice}
+        onAdd={() => {
+          setEditingDevice(null)
+          setScreen('form')
+        }}
+        onEdit={device => {
+          setEditingDevice(device)
+          setScreen('form')
+        }}
+        onDelete={handleDeleteDevice}
+      />
+    )
+  }
 
-export default App
+  if (selectedDevice) {
+    return <PowerScreen device={selectedDevice} onBack={() => setScreen('devices')} />
+  }
+
+  return null
+}

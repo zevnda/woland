@@ -16,25 +16,10 @@ fn parse_mac_address(mac_str: &str) -> Result<[u8; 6], String> {
 }
 
 #[tauri::command]
-fn send_wake_on_lan() -> Result<String, String> {
-    // Use compile-time constants set during build
-    let mac_str = env!("WOL_DEVICE_MAC");
-    let broadcast_addr = env!("WOL_BROADCAST_ADDR");
+fn send_wake_on_lan(mac: String, broadcast_addr: String) -> Result<String, String> {
+    eprintln!("[WOL] MAC: {}, Broadcast: {}", mac, broadcast_addr);
 
-    eprintln!("[WOL] Using hardcoded MAC: {}", mac_str);
-    eprintln!("[WOL] Using hardcoded Broadcast: {}", broadcast_addr);
-    eprintln!(
-        "[WOL] Using MAC: {}, Broadcast: {}",
-        mac_str, broadcast_addr
-    );
-
-    println!(
-        "Sending WOL packet to MAC: {}, Broadcast Address: {}",
-        mac_str, broadcast_addr
-    );
-
-    // Parse MAC address
-    let mac_address = parse_mac_address(&mac_str)?;
+    let mac_address = parse_mac_address(&mac)?;
 
     // Create magic packet
     let mut magic_packet = vec![0xFF; 6];

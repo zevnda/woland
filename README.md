@@ -22,35 +22,13 @@ cd woland
 pnpm install
 ```
 
-### 3. Configure Your Device
-Create a `.env` file in the project root:
+### 3. Build APK
 
 ```bash
-# Copy the example file
-cp .env.example .env
+pnpm tauri android build --apk --target aarch64
 ```
 
-Edit `.env` and add your device's MAC address and broadcast address:
-
-```
-DEVICE_MAC=AA:BB:CC:DD:EE:FF
-BROADCAST_ADDR=255.255.255.255:9
-```
-
-## Build & Run
-
-### Dev Server
-
-```bash
-pnpm tauri android dev
-```
-
-### Build APK
-
-```bash
-pnpm tauri android build
-```
-
+You APK needs to be self-signed in order to install it on your device, follow the links below for more information:
 - [Developing a mobile application - Tauri](https://v2.tauri.app/develop/#developing-your-mobile-application)
 - [Building an APK bundle - Tauri](https://v2.tauri.app/distribute/google-play/#build-apks)
 - [APK code signing - Tauri](https://v2.tauri.app/distribute/sign/android/)
