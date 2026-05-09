@@ -1,12 +1,12 @@
+@import 'tailwindcss';
+
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
-
   color: #ffffff;
   background: #0e0e0e;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -76,5 +76,3 @@ body {
   stroke-width: 3;
   transition: all 0.05s ease-in-out;
 }
-
-

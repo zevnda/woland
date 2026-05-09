@@ -1,4 +1,8 @@
 fn main() {
+    println!("cargo:rerun-if-changed=.env");
+    println!("cargo:rerun-if-env-changed=DEVICE_MAC");
+    println!("cargo:rerun-if-env-changed=BROADCAST_ADDR");
+
     tauri_build::build();
 
     // Try to load from .env file first, then fall back to environment variables

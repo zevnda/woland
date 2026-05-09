@@ -10,10 +10,14 @@
     "tauri": "tauri",
     "tab": "pnpm tauri android build --apk --target aarch64",
     "tabd": "pnpm tauri android build --apk --debug",
-    "tad": "pnpm tauri android dev"
+    "tad": "pnpm tauri android dev",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"]
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   },
   "dependencies": {
     "@tauri-apps/api": "^2",
@@ -22,11 +26,21 @@
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@tailwindcss/vite": "^4.3.0",
     "@tauri-apps/cli": "^2",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
+    "eslint": "^10.3.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "postcss": "^8.5.6",
+    "prettier": "^3.7.4",
+    "tailwindcss": "^4.3.0",
     "typescript": "~5.8.3",
+    "typescript-eslint": "^8.59.2",
     "vite": "^7.0.4"
   }
 }
