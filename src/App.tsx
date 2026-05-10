@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import type { Device, Screen } from './lib/types'
 import { loadDevices, saveDevices, loadSelectedId, saveSelectedId } from './lib/storage'
-import DeviceList from './components/DeviceList'
 import DeviceForm from './components/DeviceForm'
 import PowerScreen from './components/PowerScreen'
+import { Toast } from '@heroui/react'
 
 export default function App() {
   const [devices, setDevices] = useState<Device[]>(loadDevices)
@@ -11,14 +11,14 @@ export default function App() {
   const [screen, setScreen] = useState<Screen>('devices')
   const [editingDevice, setEditingDevice] = useState<Device | null>(null)
 
-  // Restore last screen on mount
+  // Restore last used device on mount
   useEffect(() => {
-    const devs = loadDevices()
-    const selId = loadSelectedId()
-    if (selId && devs.find(d => d.id === selId)) {
+    const devices = loadDevices()
+    const selectedId = loadSelectedId()
+    if (selectedId && devices.find(d => d.id === selectedId)) {
       setScreen('power')
     } else {
-      setScreen('devices')
+      setScreen('form')
     }
   }, [])
 
@@ -38,7 +38,9 @@ export default function App() {
       return next
     })
     setEditingDevice(null)
-    setScreen('devices')
+    saveSelectedId(device.id)
+    setSelectedId(device.id)
+    setScreen('power')
   }, [])
 
   const handleDeleteDevice = useCallback(
@@ -48,9 +50,16 @@ export default function App() {
         saveDevices(next)
         return next
       })
-      if (selectedId === id) {
-        setSelectedId(null)
+      const updatedDevices = loadDevices()
+      if (updatedDevices.length === 0) {
         saveSelectedId(null)
+        setSelectedId(null)
+        setScreen('form')
+        return
+      }
+      if (selectedId === id) {
+        setSelectedId(devices.length > 1 ? devices.find(d => d.id !== id)?.id || null : null)
+        saveSelectedId(devices.length > 1 ? devices.find(d => d.id !== id)?.id || null : null)
       }
     },
     [selectedId],
@@ -59,37 +68,38 @@ export default function App() {
   if (screen === 'form') {
     return (
       <DeviceForm
+        devices={devices}
         device={editingDevice}
         onSave={handleSaveDevice}
         onCancel={() => {
           setEditingDevice(null)
-          setScreen('devices')
+          setScreen('power')
         }}
-      />
-    )
-  }
-
-  if (screen === 'devices') {
-    return (
-      <DeviceList
-        devices={devices}
-        selectedId={selectedId}
-        onSelect={handleSelectDevice}
-        onAdd={() => {
-          setEditingDevice(null)
-          setScreen('form')
-        }}
-        onEdit={device => {
-          setEditingDevice(device)
-          setScreen('form')
-        }}
-        onDelete={handleDeleteDevice}
       />
     )
   }
 
   if (selectedDevice) {
-    return <PowerScreen device={selectedDevice} onBack={() => setScreen('devices')} />
+    return (
+      <>
+        <Toast.Provider />
+        <PowerScreen
+          device={selectedDevice}
+          devices={devices}
+          selectedId={selectedId}
+          onSelect={handleSelectDevice}
+          onAdd={() => {
+            setEditingDevice(null)
+            setScreen('form')
+          }}
+          onEdit={device => {
+            setEditingDevice(device)
+            setScreen('form')
+          }}
+          onDelete={handleDeleteDevice}
+        />
+      </>
+    )
   }
 
   return null

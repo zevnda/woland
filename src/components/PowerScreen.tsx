@@ -1,71 +1,84 @@
-import { useState, useCallback } from 'react'
+import { useCallback } from 'react'
 import { invoke } from '@tauri-apps/api/core'
 import type { Device } from '../lib/types'
-import BackButton from './BackButton'
+import DeviceSwitcher from './DeviceSwitcher'
+import { toast } from '@heroui/react'
+import { FaPowerOff } from 'react-icons/fa6'
+import NetworkInfo from './NetworkInfo'
 
-export default function PowerScreen({ device, onBack }: { device: Device; onBack: () => void }) {
-  const [status, setStatus] = useState<'idle' | 'sent' | 'error'>('idle')
-
+export default function PowerScreen({
+  device,
+  devices,
+  selectedId,
+  onSelect,
+  onAdd,
+  onEdit,
+  onDelete,
+}: {
+  device: Device
+  devices: Device[]
+  selectedId: string | null
+  onSelect: (id: string) => void
+  onAdd: () => void
+  onEdit: (device: Device) => void
+  onDelete: (id: string) => void
+}) {
   const handleSendWOL = useCallback(async () => {
     try {
-      const broadcastAddr = device.ip.includes(':') ? device.ip : `${device.ip}:9`
       await invoke<string>('send_wake_on_lan', {
         mac: device.mac,
-        broadcastAddr,
+        broadcastAddr: device.ip,
+        port: device.port,
       })
-      setStatus('sent')
+      toast(null, { description: 'Wake packet sent successfully!', variant: 'success' })
     } catch (error) {
       console.error(error)
-      setStatus('error')
+      toast(null, {
+        description: 'Failed to send wake packet. Please check your device settings and try again.',
+        variant: 'danger',
+      })
     }
-    setTimeout(() => setStatus('idle'), 2000)
   }, [device])
 
   return (
-    <main className='w-full h-dvh flex flex-col p-5 bg-[#0c0c0f] text-zinc-200'>
-      <BackButton label='Devices' onClick={onBack} />
-
-      {/* Device info card */}
-      <div className='flex items-center gap-3 p-3.5 rounded-xl bg-zinc-900'>
-        <div className='w-2.5 h-2.5 rounded-full shrink-0' style={{ background: device.color }} />
-        <div>
-          <div className='text-base font-semibold text-white'>{device.name}</div>
-          <div className='text-xs text-zinc-500 font-mono mt-px'>{device.mac}</div>
-          <div className='text-xs text-zinc-500 font-mono mt-px'>{device.ip}</div>
-        </div>
-      </div>
-
-      {/* Power button */}
-      <div className='flex-1 flex items-center justify-center'>
-        <div
-          className='tap-none w-40 h-40 rounded-full text-white cursor-pointer flex items-center justify-center select-none transition-[transform,opacity] duration-75 ease-in-out active:scale-92 active:opacity-85'
-          style={{ background: device.color }}
-          onClick={handleSendWOL}
-          title='Send Wake-on-LAN packet'
-        >
-          <svg
-            className='w-22.5 h-22.5'
-            viewBox='0 0 24 24'
-            fill='none'
-            stroke='currentColor'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
+    <main className='w-full h-dvh flex flex-col bg-[#fafafa]'>
+      {/* Hero */}
+      <div className='relative' style={{ background: device.color }}>
+        <div className='flex flex-col items-center pt-14 pb-10'>
+          <button
+            className='w-34 h-34 rounded-full bg-white flex items-center justify-center border-[6px] border-white/25 transition-transform duration-75 active:scale-95 active:opacity-80'
+            onClick={handleSendWOL}
           >
-            <path d='M18.36 6.64a9 9 0 1 1-12.73 0' />
-            <line x1='12' y1='2' x2='12' y2='12' />
-          </svg>
+            <FaPowerOff className='text-8xl' style={{ color: device.color }} />
+          </button>
         </div>
+
+        {/* SVG wave swoosh */}
+        <svg
+          viewBox='0 0 390 60'
+          xmlns='http://www.w3.org/2000/svg'
+          className='w-full block'
+          style={{ display: 'block', marginBottom: -1 }}
+          preserveAspectRatio='none'
+        >
+          <path d='M0,0 C80,60 310,0 390,50 L390,60 L0,60 Z' fill='#fafafa' />
+        </svg>
       </div>
 
-      {/* Status text */}
-      <div
-        className={`text-center text-sm text-zinc-500 h-6 pb-2 transition-opacity duration-200 ${
-          status !== 'idle' ? 'opacity-100' : 'opacity-0'
-        }`}
-      >
-        {status === 'sent' && 'Packet sent'}
-        {status === 'error' && 'Failed to send'}
+      <div className='flex flex-col gap-4 px-5 pt-2 pb-7'>
+        {/* Device switcher */}
+        <DeviceSwitcher
+          device={device}
+          devices={devices}
+          selectedId={selectedId}
+          onAdd={onAdd}
+          onSelect={onSelect}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
+
+        {/* Network info */}
+        <NetworkInfo device={device} />
       </div>
     </main>
   )

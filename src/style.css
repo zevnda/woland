@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import '@heroui/styles';
 
 @theme {
   --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
@@ -16,6 +17,11 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+}
+
+#root {
+  min-height: 100dvh;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 body {
