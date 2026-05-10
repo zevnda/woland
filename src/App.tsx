@@ -82,7 +82,7 @@ export default function App() {
   if (selectedDevice) {
     return (
       <>
-        <Toast.Provider style={{ marginBottom: 'env(safe-area-inset-bottom)' }}>
+        <Toast.Provider className='mb-safe'>
           {({ toast }) => (
             <Toast toast={toast} variant={toast.content.variant}>
               <Toast.Indicator variant={toast.content.variant} />

@@ -103,7 +103,7 @@ export default function DeviceSwitcher({
                   })}
                 </div>
               </Drawer.Body>
-              <Drawer.Footer style={{ marginBottom: 'env(safe-area-inset-bottom)' }}>
+              <Drawer.Footer className='mb-safe'>
                 <Button slot='close' variant='secondary'>
                   Close
                 </Button>

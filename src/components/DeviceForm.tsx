@@ -77,15 +77,7 @@ export default function DeviceForm({
   const errorClass = 'text-xs text-red-500 mt-0.5'
 
   return (
-    <main
-      className='w-full flex flex-col bg-[#fafafa]'
-      style={{
-        height: '100dvh',
-        paddingTop: 'env(safe-area-inset-top)',
-        paddingBottom: 'env(safe-area-inset-bottom)',
-        boxSizing: 'border-box',
-      }}
-    >
+    <main className='w-full h-dvh pt-safe pb-safe flex flex-col bg-[#fafafa] box-border'>
       <div className='px-5 pt-5 pb-2 shrink-0'>
         {(isEditing || devices.length > 0) && <BackButton label='Back' onClick={onCancel} />}
         <p className='text-xl font-semibold m-0 mb-0'>{isEditing ? 'Edit Device' : 'Add Device'}</p>
@@ -202,8 +194,7 @@ export default function DeviceForm({
             fullWidth
             size='lg'
             type='submit'
-            className='mt-auto'
-            style={{ marginBottom: 'env(safe-area-inset-bottom)' }}
+            className='mt-auto mb-safe'
             isDisabled={!isValid && Object.values(touched).some(Boolean)}
           >
             {isEditing ? 'Save Changes' : 'Add Device'}
