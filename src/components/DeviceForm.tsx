@@ -72,6 +72,53 @@ export default function DeviceForm({
       })
   }
 
+  function formatMac(e: React.ChangeEvent<HTMLInputElement>) {
+    const clean = e.target.value.replace(/[^0-9A-Fa-f]/g, '').slice(0, 12)
+
+    let formatted = ''
+    for (let i = 0; i < clean.length; i++) {
+      if (i > 0 && i % 2 === 0) formatted += ':'
+      formatted += clean[i]
+    }
+
+    // Append trailing : if we're at a boundary (2, 4, 6, 8, 10 hex chars)
+    if (clean.length > 0 && clean.length % 2 === 0 && clean.length < 12) {
+      formatted += ':'
+    }
+
+    setMac(formatted)
+  }
+
+  function formatIp(e: React.ChangeEvent<HTMLInputElement>) {
+    const raw = e.target.value.replace(/[^0-9.]/g, '')
+    const parts = raw.split('.')
+    const isDeleting = e.target.value.length < ip.length
+
+    const clamped = parts.slice(0, 4).map(part => {
+      const sliced = part.slice(0, 3)
+      const num = parseInt(sliced, 10)
+      if (!isNaN(num) && num > 255) return '255'
+      return sliced
+    })
+
+    const formatted = clamped.join('.')
+
+    const lastPart = clamped[clamped.length - 1]
+    if (!isDeleting && lastPart?.length === 3 && clamped.length < 4 && !formatted.endsWith('.')) {
+      setIp(formatted + '.')
+    } else {
+      setIp(formatted)
+    }
+  }
+
+  function handlePortChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const raw = e.target.value.replace(/[^0-9]/g, '')
+    if (raw === '') return setPort('')
+    const num = parseInt(raw, 10)
+    if (num > 65535) return setPort('65535')
+    setPort(String(num))
+  }
+
   const inputClass =
     'w-full py-3 px-3.5 rounded-[10px] border-[1.5px] text-[0.95rem] outline-none transition-colors duration-150 placeholder:text-zinc-700 focus:border-zinc-600 font-[inherit]'
   const errorClass = 'text-xs text-red-500 mt-0.5'
@@ -108,7 +155,7 @@ export default function DeviceForm({
               type='text'
               placeholder='AA:BB:CC:DD:EE:FF'
               value={mac}
-              onChange={e => setMac(e.target.value)}
+              onChange={formatMac}
               onBlur={() => setTouched(t => ({ ...t, mac: true }))}
             />
             {touched.mac && !isMacValid && (
@@ -123,9 +170,10 @@ export default function DeviceForm({
             <input
               className={inputClass}
               type='text'
+              inputMode='decimal'
               placeholder='192.168.1.255'
               value={ip}
-              onChange={e => setIp(e.target.value)}
+              onChange={formatIp}
               onBlur={() => setTouched(t => ({ ...t, ip: true }))}
             />
             {touched.ip && !isIpValid && (
@@ -138,9 +186,10 @@ export default function DeviceForm({
             <input
               className={inputClass}
               type='text'
+              inputMode='numeric'
               placeholder='9'
               value={port}
-              onChange={e => setPort(e.target.value)}
+              onChange={handlePortChange}
               onBlur={() => setTouched(t => ({ ...t, port: true }))}
             />
             {touched.port && !isPortValid && (
