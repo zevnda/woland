@@ -35,4 +35,4 @@ You APK needs to be self-signed in order to install it on your device, follow th
 
 ## Homescreen Widget
 
-WoLAnd comes with a 1x1 homescreen widget that allows you to easily power on your devices without needing to open the app
+Under development
