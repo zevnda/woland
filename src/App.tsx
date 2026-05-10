@@ -82,7 +82,17 @@ export default function App() {
   if (selectedDevice) {
     return (
       <>
-        <Toast.Provider />
+        <Toast.Provider style={{ marginBottom: 'env(safe-area-inset-bottom)' }}>
+          {({ toast }) => (
+            <Toast toast={toast} variant={toast.content.variant}>
+              <Toast.Indicator variant={toast.content.variant} />
+              <Toast.Content>
+                <Toast.Title>{toast.content.title}</Toast.Title>
+                <Toast.Description>{toast.content.description}</Toast.Description>
+              </Toast.Content>
+            </Toast>
+          )}
+        </Toast.Provider>
         <PowerScreen
           device={selectedDevice}
           devices={devices}

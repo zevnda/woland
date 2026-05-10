@@ -77,125 +77,139 @@ export default function DeviceForm({
   const errorClass = 'text-xs text-red-500 mt-0.5'
 
   return (
-    <main className='w-full h-dvh flex flex-col p-5 overflow-y-auto bg-[#fafafa]'>
-      {(isEditing || devices.length > 0) && <BackButton label='Back' onClick={onCancel} />}
+    <main
+      className='w-full flex flex-col bg-[#fafafa]'
+      style={{
+        height: '100dvh',
+        paddingTop: 'env(safe-area-inset-top)',
+        paddingBottom: 'env(safe-area-inset-bottom)',
+        boxSizing: 'border-box',
+      }}
+    >
+      <div className='px-5 pt-5 pb-2 shrink-0'>
+        {(isEditing || devices.length > 0) && <BackButton label='Back' onClick={onCancel} />}
+        <p className='text-xl font-semibold m-0 mb-0'>{isEditing ? 'Edit Device' : 'Add Device'}</p>
+      </div>
 
-      <h1 className='text-xl font-semibold m-0 mb-6'>{isEditing ? 'Edit Device' : 'Add Device'}</h1>
+      <div className='flex-1 overflow-y-auto px-5 pb-5 scroll-container'>
+        <form className='flex flex-col gap-5' onSubmit={handleSubmit}>
+          <label className='flex flex-col gap-1.5'>
+            <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>Name</span>
+            <input
+              className={inputClass}
+              type='text'
+              placeholder='Gaming PC'
+              value={name}
+              onChange={e => setName(e.target.value)}
+              onBlur={() => setTouched(t => ({ ...t, name: true }))}
+              autoFocus
+            />
+            {touched.name && !isNameValid && <span className={errorClass}>Name is required</span>}
+          </label>
 
-      <form className='flex flex-col gap-5 h-full' onSubmit={handleSubmit}>
-        <label className='flex flex-col gap-1.5'>
-          <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>Name</span>
-          <input
-            className={inputClass}
-            type='text'
-            placeholder='e.g. Gaming PC'
-            value={name}
-            onChange={e => setName(e.target.value)}
-            onBlur={() => setTouched(t => ({ ...t, name: true }))}
-            autoFocus
-          />
-          {touched.name && !isNameValid && <span className={errorClass}>Name is required</span>}
-        </label>
-
-        <label className='flex flex-col gap-1.5'>
-          <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>
-            MAC Address
-          </span>
-          <input
-            className={`${inputClass} uppercase`}
-            type='text'
-            placeholder='e.g. AA:BB:CC:DD:EE:FF'
-            value={mac}
-            onChange={e => setMac(e.target.value)}
-            onBlur={() => setTouched(t => ({ ...t, mac: true }))}
-          />
-          {touched.mac && !isMacValid && (
-            <span className={errorClass}>Invalid MAC address (e.g. AA:BB:CC:DD:EE:FF)</span>
-          )}
-        </label>
-
-        <label className='flex flex-col gap-1.5'>
-          <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>
-            Broadcast IP
-          </span>
-          <input
-            className={inputClass}
-            type='text'
-            placeholder='e.g. 192.168.1.255'
-            value={ip}
-            onChange={e => setIp(e.target.value)}
-            onBlur={() => setTouched(t => ({ ...t, ip: true }))}
-          />
-          {touched.ip && !isIpValid && (
-            <span className={errorClass}>Invalid IP address (e.g. 192.168.1.255)</span>
-          )}
-        </label>
-
-        <label className='flex flex-col gap-1.5'>
-          <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>Port</span>
-          <input
-            className={inputClass}
-            type='text'
-            placeholder='e.g. 9'
-            value={port}
-            onChange={e => setPort(e.target.value)}
-            onBlur={() => setTouched(t => ({ ...t, port: true }))}
-          />
-          {touched.port && !isPortValid && (
-            <span className={errorClass}>
-              Port must be between 1 and 65535. Usually 9 is the best option.
+          <label className='flex flex-col gap-1.5'>
+            <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>
+              MAC Address
             </span>
-          )}
-        </label>
+            <input
+              className={`${inputClass} uppercase`}
+              type='text'
+              placeholder='AA:BB:CC:DD:EE:FF'
+              value={mac}
+              onChange={e => setMac(e.target.value)}
+              onBlur={() => setTouched(t => ({ ...t, mac: true }))}
+            />
+            {touched.mac && !isMacValid && (
+              <span className={errorClass}>Invalid MAC address (e.g. AA:BB:CC:DD:EE:FF)</span>
+            )}
+          </label>
 
-        <div className='flex flex-col gap-1.5'>
-          <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>Color</span>
-          <div className='flex gap-2.5 flex-wrap'>
-            {COLORS.map(c => (
-              <button
-                key={c}
-                type='button'
-                className={`w-8 h-8 rounded-full border-[2.5px] cursor-pointer p-0 transition-all duration-100 ${
-                  c === color ? 'border-zinc-600 scale-115' : 'border-transparent active:scale-90'
-                }`}
-                style={{ background: c }}
-                onClick={() => setColor(c)}
-              />
-            ))}
-          </div>
-        </div>
+          <label className='flex flex-col gap-1.5'>
+            <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>
+              Broadcast IP
+            </span>
+            <input
+              className={inputClass}
+              type='text'
+              placeholder='192.168.1.255'
+              value={ip}
+              onChange={e => setIp(e.target.value)}
+              onBlur={() => setTouched(t => ({ ...t, ip: true }))}
+            />
+            {touched.ip && !isIpValid && (
+              <span className={errorClass}>Invalid IP address (e.g. 192.168.1.255)</span>
+            )}
+          </label>
 
-        <div className='flex flex-col gap-1.5'>
-          <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>Icon</span>
-          <div className='flex gap-2.5 flex-wrap'>
-            {ICONS.map(i => {
-              const Icon = ICON_MAP[i]
-              return (
+          <label className='flex flex-col gap-1.5'>
+            <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>Port</span>
+            <input
+              className={inputClass}
+              type='text'
+              placeholder='9'
+              value={port}
+              onChange={e => setPort(e.target.value)}
+              onBlur={() => setTouched(t => ({ ...t, port: true }))}
+            />
+            {touched.port && !isPortValid && (
+              <span className={errorClass}>
+                Port must be between 1 and 65535. Usually 9 is the best option.
+              </span>
+            )}
+          </label>
+
+          <div className='flex flex-col gap-1.5'>
+            <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>Color</span>
+            <div className='flex gap-2.5 flex-wrap'>
+              {COLORS.map(c => (
                 <button
-                  key={i}
+                  key={c}
                   type='button'
-                  className={`rounded-full border-[2.5px] cursor-pointer p-1.5 transition-all duration-100 ${
-                    i === icon ? 'border-zinc-600 scale-115' : 'border-transparent active:scale-90'
+                  className={`w-8 h-8 rounded-full border-[2.5px] cursor-pointer p-0 transition-all duration-100 ${
+                    c === color ? 'border-zinc-600 scale-115' : 'border-transparent active:scale-90'
                   }`}
-                  onClick={() => setIcon(i)}
-                >
-                  <Icon size={24} color={i === icon ? color : undefined} />
-                </button>
-              )
-            })}
+                  style={{ background: c }}
+                  onClick={() => setColor(c)}
+                />
+              ))}
+            </div>
           </div>
-        </div>
 
-        <Button
-          fullWidth
-          size='lg'
-          type='submit'
-          className='mt-auto'
-          isDisabled={!isValid && Object.values(touched).some(Boolean)}
-        >
-          {isEditing ? 'Save Changes' : 'Add Device'}
-        </Button>
-      </form>
+          <div className='flex flex-col gap-1.5'>
+            <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>Icon</span>
+            <div className='flex gap-2.5 flex-wrap'>
+              {ICONS.map(i => {
+                const Icon = ICON_MAP[i]
+                return (
+                  <button
+                    key={i}
+                    type='button'
+                    className={`rounded-full border-[2.5px] cursor-pointer p-1.5 transition-all duration-100 ${
+                      i === icon
+                        ? 'border-zinc-600 scale-115'
+                        : 'border-transparent active:scale-90'
+                    }`}
+                    onClick={() => setIcon(i)}
+                  >
+                    <Icon size={24} color={i === icon ? color : undefined} />
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          <Button
+            fullWidth
+            size='lg'
+            type='submit'
+            className='mt-auto'
+            style={{ marginBottom: 'env(safe-area-inset-bottom)' }}
+            isDisabled={!isValid && Object.values(touched).some(Boolean)}
+          >
+            {isEditing ? 'Save Changes' : 'Add Device'}
+          </Button>
+        </form>
+      </div>
     </main>
   )
 }

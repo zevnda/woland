@@ -1,8 +1,7 @@
 import { Button, Drawer, useOverlayState } from '@heroui/react'
 import { Device, ICON_MAP } from '../lib/types'
 import { IoAdd } from 'react-icons/io5'
-import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa'
-import { FaListUl } from 'react-icons/fa6'
+import { FaCaretDown, FaRegEdit, FaRegTrashAlt } from 'react-icons/fa'
 
 export default function DeviceSwitcher({
   device,
@@ -40,7 +39,7 @@ export default function DeviceSwitcher({
                 <p className='text-zinc-800 font-bold leading-4.5'>{device.name}</p>
               </div>
             </div>
-            <FaListUl size={28} />
+            <FaCaretDown size={28} />
           </div>
         </div>
         <Drawer.Backdrop isOpen={state.isOpen} onOpenChange={state.setOpen}>
@@ -104,7 +103,7 @@ export default function DeviceSwitcher({
                   })}
                 </div>
               </Drawer.Body>
-              <Drawer.Footer>
+              <Drawer.Footer style={{ marginBottom: 'env(safe-area-inset-bottom)' }}>
                 <Button slot='close' variant='secondary'>
                   Close
                 </Button>

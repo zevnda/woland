@@ -30,12 +30,17 @@ export default function PowerScreen({
         broadcastAddr: device.ip,
         port: device.port,
       })
-      toast(null, { description: 'Wake packet sent successfully!', variant: 'success' })
+      toast(null, {
+        description: 'Wake packet sent successfully!',
+        variant: 'success',
+        timeout: 1500,
+      })
     } catch (error) {
       console.error(error)
       toast(null, {
         description: 'Failed to send wake packet. Please check your device settings and try again.',
         variant: 'danger',
+        timeout: 1500,
       })
     }
   }, [device])
@@ -44,7 +49,7 @@ export default function PowerScreen({
     <main className='w-full h-dvh flex flex-col bg-[#fafafa]'>
       {/* Hero */}
       <div className='relative' style={{ background: device.color }}>
-        <div className='flex flex-col items-center pt-14 pb-10'>
+        <div className='flex flex-col items-center pt-20 pb-10'>
           <button
             className='w-34 h-34 rounded-full bg-white flex items-center justify-center border-[6px] border-white/25 transition-transform duration-75 active:scale-95 active:opacity-80'
             onClick={handleSendWOL}

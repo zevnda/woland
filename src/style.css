@@ -20,17 +20,22 @@
 }
 
 #root {
-  min-height: 100dvh;
-  padding-bottom: env(safe-area-inset-bottom);
+  height: 100dvh;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
 }
 
-/* Tap highlight removal — no Tailwind utility for this */
 button,
 [role='button'],
 .tap-none {
   -webkit-tap-highlight-color: transparent;
+}
+
+.scroll-container {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
