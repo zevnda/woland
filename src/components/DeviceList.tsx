@@ -16,7 +16,7 @@ export default function DeviceList({
   onDelete: (id: string) => void
 }) {
   return (
-    <main className='w-full h-dvh py-10 flex flex-col p-5 overflow-y-auto bg-[#0c0c0f] text-zinc-200'>
+    <main className='w-full h-dvh flex flex-col p-5 overflow-y-auto bg-[#0c0c0f] text-zinc-200'>
       <div className='flex items-center justify-between mb-5'>
         <h1 className='text-xl font-semibold text-white m-0'>Devices</h1>
       </div>

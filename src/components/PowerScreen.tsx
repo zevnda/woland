@@ -22,7 +22,7 @@ export default function PowerScreen({ device, onBack }: { device: Device; onBack
   }, [device])
 
   return (
-    <main className='w-full h-dvh py-10 flex flex-col p-5 bg-[#0c0c0f] text-zinc-200'>
+    <main className='w-full h-dvh flex flex-col p-5 bg-[#0c0c0f] text-zinc-200'>
       <BackButton label='Devices' onClick={onBack} />
 
       {/* Device info card */}
@@ -44,7 +44,7 @@ export default function PowerScreen({ device, onBack }: { device: Device; onBack
           title='Send Wake-on-LAN packet'
         >
           <svg
-            className='w-[90px] h-[90px]'
+            className='w-22.5 h-22.5'
             viewBox='0 0 24 24'
             fill='none'
             stroke='currentColor'

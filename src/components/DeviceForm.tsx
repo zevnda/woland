@@ -33,7 +33,7 @@ export default function DeviceForm({
   }
 
   return (
-    <main className='w-full h-dvh py-10 flex flex-col p-5 overflow-y-auto bg-[#0c0c0f] text-zinc-200'>
+    <main className='w-full h-dvh flex flex-col p-5 overflow-y-auto bg-[#0c0c0f] text-zinc-200'>
       <BackButton label='Back' onClick={onCancel} />
 
       <h1 className='text-xl font-semibold text-white m-0 mb-6'>

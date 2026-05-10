@@ -16,16 +16,16 @@ class MainActivity : TauriActivity() {
             keepSplash = false
         }, 500)
 
-        enableEdgeToEdge()
+        // enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         // Set window background to your app color to hide the flash
         window.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(
-        android.graphics.Color.parseColor("#0e0e0e")
+        android.graphics.Color.parseColor("#0c0c0f")
     ))
 
-        window.statusBarColor = Color.TRANSPARENT
-        window.navigationBarColor = Color.parseColor("#0e0e0e")
+        window.statusBarColor = Color.parseColor("#0c0c0f")
+        window.navigationBarColor = Color.parseColor("#0c0c0f")
         val controller = WindowInsetsControllerCompat(window, window.decorView)
         controller.isAppearanceLightStatusBars = false
         controller.isAppearanceLightNavigationBars = false

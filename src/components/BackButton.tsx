@@ -1,7 +1,7 @@
 export default function BackButton({ label, onClick }: { label: string; onClick: () => void }) {
   return (
     <button
-      className='self-start mb-4 inline-flex items-center gap-1 bg-transparent border-none text-zinc-400 text-sm cursor-pointer p-0 active:text-white'
+      className='self-start mb-4 inline-flex items-center gap-1 bg-transparent border-none text-zinc-400 text-md font-bold cursor-pointer p-0 active:text-white'
       onClick={onClick}
     >
       <svg
