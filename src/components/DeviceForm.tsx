@@ -73,6 +73,7 @@ export default function DeviceForm({
   }
 
   function formatMac(e: React.ChangeEvent<HTMLInputElement>) {
+    const isDeleting = e.target.value.length < mac.length
     const clean = e.target.value.replace(/[^0-9A-Fa-f]/g, '').slice(0, 12)
 
     let formatted = ''
@@ -81,8 +82,7 @@ export default function DeviceForm({
       formatted += clean[i]
     }
 
-    // Append trailing : if we're at a boundary (2, 4, 6, 8, 10 hex chars)
-    if (clean.length > 0 && clean.length % 2 === 0 && clean.length < 12) {
+    if (!isDeleting && clean.length > 0 && clean.length % 2 === 0 && clean.length < 12) {
       formatted += ':'
     }
 

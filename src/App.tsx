@@ -6,20 +6,26 @@ import PowerScreen from './components/PowerScreen'
 import { Toast } from '@heroui/react'
 
 export default function App() {
-  const [devices, setDevices] = useState<Device[]>(loadDevices)
-  const [selectedId, setSelectedId] = useState<string | null>(loadSelectedId)
-  const [screen, setScreen] = useState<Screen>('devices')
+  const [devices, setDevices] = useState<Device[]>([])
+  const [selectedId, setSelectedId] = useState<string | null>(loadSelectedId())
+  const [screen, setScreen] = useState<Screen | null>(null)
   const [editingDevice, setEditingDevice] = useState<Device | null>(null)
 
-  // Restore last used device on mount
+  // Load devices from file on mount
   useEffect(() => {
-    const devices = loadDevices()
-    const selectedId = loadSelectedId()
-    if (selectedId && devices.find(d => d.id === selectedId)) {
-      setScreen('power')
-    } else {
-      setScreen('form')
-    }
+    loadDevices().then(loaded => {
+      setDevices(loaded)
+      const savedId = loadSelectedId()
+      if (savedId && loaded.find(d => d.id === savedId)) {
+        setScreen('power')
+      } else if (loaded.length > 0) {
+        setSelectedId(loaded[0].id)
+        saveSelectedId(loaded[0].id)
+        setScreen('power')
+      } else {
+        setScreen('form')
+      }
+    })
   }, [])
 
   const selectedDevice = devices.find(d => d.id === selectedId) || null
@@ -48,22 +54,23 @@ export default function App() {
       setDevices(prev => {
         const next = prev.filter(d => d.id !== id)
         saveDevices(next)
+        if (next.length === 0) {
+          saveSelectedId(null)
+          setSelectedId(null)
+          setScreen('form')
+        } else if (selectedId === id) {
+          const newSelected = next[0].id
+          setSelectedId(newSelected)
+          saveSelectedId(newSelected)
+        }
         return next
       })
-      const updatedDevices = loadDevices()
-      if (updatedDevices.length === 0) {
-        saveSelectedId(null)
-        setSelectedId(null)
-        setScreen('form')
-        return
-      }
-      if (selectedId === id) {
-        setSelectedId(devices.length > 1 ? devices.find(d => d.id !== id)?.id || null : null)
-        saveSelectedId(devices.length > 1 ? devices.find(d => d.id !== id)?.id || null : null)
-      }
     },
     [selectedId],
   )
+
+  // Still loading
+  if (screen === null) return null
 
   if (screen === 'form') {
     return (

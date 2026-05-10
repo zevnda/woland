@@ -1,6 +1,8 @@
 use socket2::{Domain, Protocol, Socket, Type};
 use std::net::IpAddr;
 use std::net::SocketAddr;
+use std::path::PathBuf;
+use tauri::Manager;
 
 #[derive(serde::Serialize)]
 pub struct NetworkInfo {
@@ -8,6 +10,29 @@ pub struct NetworkInfo {
     subnet_mask: Option<String>,
     gateway: Option<String>,
     interface_name: Option<String>,
+}
+
+fn devices_path(app: &tauri::AppHandle) -> PathBuf {
+    app.path().app_data_dir().unwrap().join("devices.json")
+}
+
+#[tauri::command]
+fn save_devices(app: tauri::AppHandle, devices: String) -> Result<(), String> {
+    let path = devices_path(&app);
+    eprintln!("[SAVE_DEVICES] Writing to: {:?}", path);
+    std::fs::create_dir_all(path.parent().unwrap()).map_err(|e| e.to_string())?;
+    std::fs::write(&path, devices).map_err(|e| e.to_string())?;
+    eprintln!("[SAVE_DEVICES] Success");
+    Ok(())
+}
+
+#[tauri::command]
+fn load_devices(app: tauri::AppHandle) -> Result<String, String> {
+    let path = devices_path(&app);
+    if !path.exists() {
+        return Ok("[]".to_string());
+    }
+    std::fs::read_to_string(&path).map_err(|e| e.to_string())
 }
 
 /// Parse MAC address from string format
@@ -102,7 +127,12 @@ fn get_network_info() -> NetworkInfo {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![send_wake_on_lan, get_network_info])
+        .invoke_handler(tauri::generate_handler![
+            send_wake_on_lan,
+            get_network_info,
+            save_devices,
+            load_devices
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

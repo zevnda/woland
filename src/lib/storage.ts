@@ -1,18 +1,19 @@
+import { invoke } from '@tauri-apps/api/core'
 import type { Device } from './types'
 
-const DEVICES_KEY = 'woland_devices'
 const SELECTED_KEY = 'woland_selected_device'
 
-export function loadDevices(): Device[] {
+export async function loadDevices(): Promise<Device[]> {
   try {
-    return JSON.parse(localStorage.getItem(DEVICES_KEY) || '[]')
+    const json = await invoke<string>('load_devices')
+    return JSON.parse(json)
   } catch {
     return []
   }
 }
 
-export function saveDevices(devices: Device[]) {
-  localStorage.setItem(DEVICES_KEY, JSON.stringify(devices))
+export async function saveDevices(devices: Device[]): Promise<void> {
+  await invoke('save_devices', { devices: JSON.stringify(devices) })
 }
 
 export function loadSelectedId(): string | null {
