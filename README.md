@@ -3,9 +3,9 @@
 
 <h1>WoLAnd (Wake on LAN Android)</h1>
 
-A simple yet powerful Android app for remotely waking up your devices using WoL technology.
+A simple yet powerful Android app for remotely waking up your devices using WoL technology
 
-Save and manage multiple devices, and instantly power on computers, consoles, servers, and many other devices from your phone — with convenient homescreen widgets for quick access.
+Save and manage multiple devices, and instantly power on computers, consoles, servers, and many other devices from your phone — with convenient homescreen widgets for quick access
 
 <div align="center">
   <table>
@@ -21,19 +21,19 @@ Save and manage multiple devices, and instantly power on computers, consoles, se
 
 # Installation
 
-Download the latest ready-to-install APK from the **[releases page](https://github.com/zevnda/woland/releases)**.
+Download the latest ready-to-install APK from the **[releases page](https://github.com/zevnda/woland/releases)**
 
 # Build It Yourself
 
-Follow the **[steps in the wiki](https://github.com/zevnda/woland/wiki#build-it-yourself)** to develop upon and build WoLAnd yourself.
+Follow the **[steps in the wiki](https://github.com/zevnda/woland/wiki#build-it-yourself)** to develop upon and build WoLAnd yourself
 
 # Homescreen Widgets
 
-WoLAnd includes three homescreen widgets for quickly waking up your devices. Depending on the widget size, you can control up to 4 devices from a single widget.
+WoLAnd includes three homescreen widgets for quickly waking up your devices. Depending on the widget size, you can control up to 4 devices from a single widget
 
-To choose which devices appear in the widget, reorder them in the device drawer by dragging them and then re-add the widget to the homescreen to apply the changes.
+To choose which devices appear in the widget, reorder them in the device drawer by dragging them and then re-add the widget to the homescreen to apply the changes
 
-Widget previews can be found **[here](https://github.com/zevnda/woland/wiki/Widgets)**.
+Widget previews can be found **[here](https://github.com/zevnda/woland/wiki/Widgets)**
 
 # License
 Copyright © 2026 zevnda — **[MIT License](./LICENSE)**
