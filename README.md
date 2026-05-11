@@ -21,11 +21,11 @@ Save and manage multiple devices, and instantly power on computers, consoles, se
 
 # Installation
 
-Download the latest ready-to-install APK from the [releases page](https://github.com/zevnda/woland/releases).
+Download the latest ready-to-install APK from the **[releases page](https://github.com/zevnda/woland/releases)**.
 
 # Build It Yourself
 
-Follow the [steps in the wiki](https://github.com/zevnda/woland/wiki#build-it-yourself) to develop upon and build WoLAnd yourself.
+Follow the **[steps in the wiki](https://github.com/zevnda/woland/wiki#build-it-yourself)** to develop upon and build WoLAnd yourself.
 
 # Homescreen Widgets
 
@@ -33,7 +33,7 @@ WoLAnd includes three homescreen widgets for quickly waking up your devices. Dep
 
 To choose which devices appear in the widget, reorder them in the device drawer by dragging them and then re-add the widget to the homescreen to apply the changes.
 
-Widget previews can be found [here](https://github.com/zevnda/woland/wiki/Widgets).
+Widget previews can be found **[here](https://github.com/zevnda/woland/wiki/Widgets)**.
 
 # License
 Copyright © 2026 zevnda — **[MIT License](./LICENSE)**
