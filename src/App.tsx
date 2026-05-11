@@ -3,7 +3,7 @@ import type { Device, Screen } from './lib/types'
 import { loadDevices, saveDevices, loadSelectedId, saveSelectedId } from './lib/storage'
 import DeviceForm from './components/DeviceForm'
 import PowerScreen from './components/PowerScreen'
-import { Toast } from '@heroui/react'
+import { toast, Toast } from '@heroui/react'
 
 export default function App() {
   const [devices, setDevices] = useState<Device[]>([])
@@ -34,6 +34,11 @@ export default function App() {
     setSelectedId(id)
     saveSelectedId(id)
     setScreen('power')
+    toast(null, {
+      description: `Device "${devices.find(d => d.id === id)?.name ?? 'Unknown'}" selected`,
+      variant: 'success',
+      timeout: 1500,
+    })
   }, [])
 
   const handleReorderDevices = useCallback((reordered: Device[]) => {
@@ -52,6 +57,11 @@ export default function App() {
     saveSelectedId(device.id)
     setSelectedId(device.id)
     setScreen('power')
+    toast(null, {
+      description: `Device "${device.name}" added successfully!`,
+      variant: 'success',
+      timeout: 1500,
+    })
   }, [])
 
   const handleDeleteDevice = useCallback(
@@ -67,7 +77,13 @@ export default function App() {
           const newSelected = next[0].id
           setSelectedId(newSelected)
           saveSelectedId(newSelected)
+          setScreen('power')
         }
+        toast(null, {
+          description: `Device "${prev.find(d => d.id === id)?.name ?? 'Unknown'}" deleted.`,
+          variant: 'success',
+          timeout: 1500,
+        })
         return next
       })
     },
