@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version number (e.g., 0.1.0)"
+        description: "Version Number"
         required: true
         type: string
 
@@ -76,6 +76,31 @@ jobs:
           VERSION="${{ github.event.inputs.version }}"
           sed -i 's/"version": "[^"]*"/"version": "'$VERSION'"/' src-tauri/tauri.conf.json
 
+      - name: Commit version bump
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add src-tauri/tauri.conf.json
+          git commit -m "bump version to ${{ github.event.inputs.version }}"
+          git push
+
+      - name: Generate release notes
+        id: generate_notes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data } = await github.rest.repos.generateReleaseNotes({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: 'v${{ github.event.inputs.version }}'
+            });
+            
+            const fs = require('fs');
+            fs.writeFileSync('./release_notes.md', data.body);
+            
+            console.log('Generated release notes:');
+            console.log(data.body);
+
       - name: Build APK
         run: pnpm tauri android build --apk --target aarch64
         env:
@@ -106,6 +131,7 @@ jobs:
         with:
           tag_name: v${{ github.event.inputs.version }}
           name: WoLAnd v${{ github.event.inputs.version }}
+          body_path: ./release_notes.md
           files: |
             src-tauri/gen/android/app/build/outputs/apk/universal/release/WoLAnd-${{ github.event.inputs.version }}.apk
           draft: false
