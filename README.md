@@ -3,7 +3,7 @@
 
 <h1>WoLAnd (Wake on LAN Android)</h1>
 
-A simple yet powerful Android app for remotely waking up your devices using WoL technology
+A simple yet powerful Android app for remotely turning on your devices using WoL technology (magic packets)
 
 Save and manage multiple devices, and instantly power on computers, consoles, servers, and many other devices from your phone — with convenient homescreen widgets for quick access
 
