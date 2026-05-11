@@ -36,6 +36,11 @@ export default function App() {
     setScreen('power')
   }, [])
 
+  const handleReorderDevices = useCallback((reordered: Device[]) => {
+    setDevices(reordered)
+    saveDevices(reordered)
+  }, [])
+
   const handleSaveDevice = useCallback((device: Device) => {
     setDevices(prev => {
       const exists = prev.find(d => d.id === device.id)
@@ -105,6 +110,7 @@ export default function App() {
           devices={devices}
           selectedId={selectedId}
           onSelect={handleSelectDevice}
+          onReorder={handleReorderDevices}
           onAdd={() => {
             setEditingDevice(null)
             setScreen('form')

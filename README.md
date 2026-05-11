@@ -49,5 +49,11 @@ Your APK needs to be self-signed in order to install it on your device, follow t
 - [Building an APK bundle - Tauri](https://v2.tauri.app/distribute/google-play/#build-apks)
 - [APK code signing - Tauri](https://v2.tauri.app/distribute/sign/android/)
 
+# Homescreen Widgets
+
+WoLAnd includes three homescreen widgets for quickly waking up your devices. Depending on the widget size, you can control up to 4 devices from a single widget.
+
+To choose which devices appear, reorder them in the device drawer by dragging them. If you change the order, remove and re-add the widget to apply the update.
+
 # License
 Copyright © 2026 zevnda — **[MIT License](./LICENSE)**

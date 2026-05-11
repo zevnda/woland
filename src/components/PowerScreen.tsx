@@ -12,6 +12,7 @@ export default function PowerScreen({
   devices,
   selectedId,
   onSelect,
+  onReorder,
   onAdd,
   onEdit,
   onDelete,
@@ -20,6 +21,7 @@ export default function PowerScreen({
   devices: Device[]
   selectedId: string | null
   onSelect: (id: string) => void
+  onReorder: (devices: Device[]) => void
   onAdd: () => void
   onEdit: (device: Device) => void
   onDelete: (id: string) => void
@@ -105,6 +107,7 @@ export default function PowerScreen({
           onSelect={onSelect}
           onEdit={onEdit}
           onDelete={onDelete}
+          onReorder={onReorder}
         />
 
         {/* Network info */}
