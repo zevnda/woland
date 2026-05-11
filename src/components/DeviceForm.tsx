@@ -131,12 +131,12 @@ export default function DeviceForm({
   }
 
   const inputClass =
-    'w-full py-3 px-3.5 rounded-[10px] border-[1.5px] text-[0.95rem] outline-none transition-colors duration-150 placeholder:text-zinc-700 focus:border-zinc-600 font-[inherit]'
-  const errorClass = 'text-xs text-red-500 mt-0.5'
+    'w-full py-3 px-3.5 rounded-[10px] border-[1.5px] text-[0.95rem] outline-none transition-colors duration-150 placeholder:text-alt dark:placeholder:text-alt focus:border-border font-[inherit] dark:bg-foreground dark:text-white'
+  const errorClass = 'text-xs text-danger mt-0.5'
 
   return (
-    <main className='w-full h-dvh pb-safe flex flex-col bg-[#fafafa] box-border'>
-      <div className='w-full h-7.5 bg-[#33363b]' />
+    <main className='w-full h-dvh pb-safe flex flex-col bg-bg box-border'>
+      <div className='w-full h-7.5 bg-status' />
 
       <div className='px-5 pt-3 pb-2 shrink-0'>
         {(isEditing || devices.length > 0) && <BackButton label='Back' onClick={onCancel} />}
@@ -146,7 +146,9 @@ export default function DeviceForm({
       <div className='flex-1 overflow-y-auto px-5 pb-5 scroll-container'>
         <form className='flex flex-col gap-5' onSubmit={handleSubmit}>
           <label className='flex flex-col gap-1.5'>
-            <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>Name</span>
+            <span className='text-xs font-medium text-black dark:text-white uppercase tracking-wide'>
+              Name
+            </span>
             <input
               className={inputClass}
               type='text'
@@ -160,7 +162,7 @@ export default function DeviceForm({
           </label>
 
           <label className='flex flex-col gap-1.5'>
-            <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>
+            <span className='text-xs font-medium text-black dark:text-white uppercase tracking-wide'>
               MAC Address
             </span>
             <input
@@ -177,7 +179,7 @@ export default function DeviceForm({
           </label>
 
           <label className='flex flex-col gap-1.5'>
-            <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>
+            <span className='text-xs font-medium text-black dark:text-white uppercase tracking-wide'>
               Broadcast IP
             </span>
             <input
@@ -195,7 +197,9 @@ export default function DeviceForm({
           </label>
 
           <label className='flex flex-col gap-1.5'>
-            <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>Port</span>
+            <span className='text-xs font-medium text-black dark:text-white uppercase tracking-wide'>
+              Port
+            </span>
             <input
               className={inputClass}
               type='text'
@@ -213,7 +217,9 @@ export default function DeviceForm({
           </label>
 
           <div className='flex flex-col gap-1.5'>
-            <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>Color</span>
+            <span className='text-xs font-medium text-black dark:text-white uppercase tracking-wide'>
+              Color
+            </span>
             <div className='flex gap-2.5 flex-wrap'>
               {COLORS.map(c => (
                 <button
@@ -230,7 +236,9 @@ export default function DeviceForm({
           </div>
 
           <div className='flex flex-col gap-1.5'>
-            <span className='text-xs font-medium text-zinc-700 uppercase tracking-wide'>Icon</span>
+            <span className='text-xs font-medium text-black dark:text-white uppercase tracking-wide'>
+              Icon
+            </span>
             <div className='flex gap-2.5 flex-wrap'>
               {ICONS.map(i => {
                 const Icon = ICON_MAP[i]

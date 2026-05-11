@@ -3,7 +3,7 @@ import { Device } from '../lib/types'
 
 export default function NetworkInfo({ device }: { device: Device }) {
   return (
-    <div className='flex items-center gap-3 w-full p-3.5 rounded-xl bg-[#fafafa] shadow-md border border-black/10'>
+    <div className='flex items-center gap-3 w-full p-3.5 rounded-xl bg-bg dark:bg-foreground shadow-md border border-border'>
       <div className='flex flex-col w-full'>
         <LuNetwork size={28} />
         <div className='grid grid-cols-2 gap-3 mt-3'>
@@ -17,9 +17,9 @@ export default function NetworkInfo({ device }: { device: Device }) {
             { label: 'Port', value: device.port },
           ].map(({ label, value }) => (
             <div className='flex flex-col' key={label}>
-              <p className='text-zinc-800 font-semibold text-sm'>{label}</p>
+              <p className='text-black dark:text-white font-semibold text-sm'>{label}</p>
               <p
-                className={`text-zinc-500 leading-4.5 text-sm font-mono ${label === 'MAC Address' ? 'uppercase' : ''}`}
+                className={`text-alt leading-4.5 text-sm font-mono ${label === 'MAC Address' ? 'uppercase' : ''}`}
               >
                 {value}
               </p>

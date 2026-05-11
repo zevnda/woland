@@ -2,7 +2,21 @@
 @import '@heroui/styles';
 
 @theme {
-  --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+  --color-bg: #fafafa;
+  --color-foreground: #fafafa;
+  --color-status: #c4c4c4;
+  --color-border: #00000010;
+  --color-alt: #00000060;
+  --color-ring: #3191ff;
+}
+
+.dark {
+  --color-bg: #161717;
+  --color-foreground: #282828;
+  --color-status: #161717;
+  --color-border: #ffffff10;
+  --color-alt: #ffffff70;
+  --color-ring: #51a2ff;
 }
 
 :root {

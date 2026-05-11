@@ -10,6 +10,7 @@ Save and manage multiple devices, and instantly power on computers, consoles, se
           <td><img src="assets/image1.png" width="200" alt="1"></td>
           <td><img src="assets/image2.png" width="200" alt="2"></td>
           <td><img src="assets/image3.png" width="200" alt="3"></td>
+          <td><img src="assets/image4.png" width="200" alt="4"></td>
       </tr>
   </table>
 </div>

@@ -52,12 +52,12 @@ function SortableDevice({
         zIndex: isDragging ? 10 : undefined,
         position: 'relative',
       }}
-      className={`flex items-center gap-3 p-3.5 rounded-xl bg-[#fafafa] border-[1.5px] ${
+      className={`flex items-center gap-3 p-3.5 rounded-xl bg-bg dark:bg-foreground border-[1.5px] ${
         isDragging
-          ? 'opacity-80 shadow-lg border-zinc-200'
+          ? 'opacity-80 shadow-lg border-black/30 dark:border-white/30'
           : device.id === selectedId
-            ? 'border-blue-500'
-            : 'border-black/10'
+            ? 'border-ring'
+            : 'border-border'
       }`}
       onClick={() => {
         if (!isDragging) {
@@ -69,8 +69,10 @@ function SortableDevice({
       <Icon size={20} color={device.color} />
 
       <div className='flex-1 min-w-0'>
-        <div className='text-[0.95rem] font-medium text-black truncate'>{device.name}</div>
-        <div className='text-xs text-zinc-500 font-mono mt-0.5 uppercase'>{device.mac}</div>
+        <div className='text-[0.95rem] font-medium text-black dark:text-white truncate'>
+          {device.name}
+        </div>
+        <div className='text-xs text-alt font-mono mt-0.5 uppercase'>{device.mac}</div>
       </div>
 
       <div className='flex items-center gap-0.5 shrink-0'>
@@ -82,7 +84,7 @@ function SortableDevice({
             onEdit(device)
           }}
         >
-          <FaRegEdit className='text-zinc-600' />
+          <FaRegEdit className='text-alt' />
         </Button>
 
         <Button
@@ -99,10 +101,10 @@ function SortableDevice({
         <div
           {...attributes}
           {...listeners}
-          className='touch-none shrink-0 cursor-grab active:cursor-grabbing text-zinc-400 p-1 -ml-1'
+          className='touch-none shrink-0 cursor-grab active:cursor-grabbing p-1 -ml-1'
           onClick={e => e.stopPropagation()}
         >
-          <MdDragIndicator size={22} />
+          <MdDragIndicator size={22} className='text-alt' />
         </div>
       </div>
     </div>
@@ -160,15 +162,15 @@ export default function DeviceSwitcher({
     <div>
       <Drawer>
         <div
-          className='flex items-center gap-3 w-full p-3.5 rounded-xl bg-[#fafafa] shadow-md border border-black/10 active:bg-[#f7f7f7] active:scale-[0.98] transition-transform duration-100'
+          className='flex items-center gap-3 w-full p-3.5 rounded-xl bg-bg dark:bg-foreground shadow-md border border-border active:scale-[0.98] transition-transform duration-100'
           onClick={() => state.open()}
         >
           <div className='flex justify-between w-full items-center'>
             <div>
-              <p className='text-zinc-500 font-semibold text-sm'>Selected Device</p>
-              <div className='flex items-center gap-1'>
+              <p className='text-alt font-semibold text-sm'>Selected Device</p>
+              <div className='flex items-center gap-1.5'>
                 <Icon size={20} color={device.color} className='inline-block' />
-                <p className='text-zinc-800 font-bold leading-4.5'>{device.name}</p>
+                <p className='font-bold leading-4.5'>{device.name}</p>
               </div>
             </div>
             <FaCaretDown size={28} />
@@ -181,8 +183,8 @@ export default function DeviceSwitcher({
               <Drawer.Header>
                 <Drawer.Heading>
                   <div>
-                    <p>Select A Device</p>
-                    <p className='text-black/40 text-xs'>
+                    <p className='text-black dark:text-white'>Select A Device</p>
+                    <p className='text-alt text-xs'>
                       Drag devices to order them for widget display before adding the widget to your
                       home screen.
                     </p>

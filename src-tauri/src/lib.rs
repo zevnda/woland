@@ -118,7 +118,7 @@ fn get_network_info() -> NetworkInfo {
     NetworkInfo {
         source_ip,
         subnet_mask,
-        gateway: None, // Requires platform-specific code
+        gateway: None,
         interface_name,
     }
 }

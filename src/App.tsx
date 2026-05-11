@@ -118,7 +118,7 @@ export default function App() {
             <Toast
               toast={toast}
               variant={toast.content.variant}
-              className='rounded-xl shadow-md border border-black/10'
+              className='rounded-xl bg-bg dark:bg-foreground shadow-md border border-border'
             >
               <Toast.Indicator variant={toast.content.variant} />
               <Toast.Content>
