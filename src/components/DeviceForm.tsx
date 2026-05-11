@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { invoke } from '@tauri-apps/api/core'
 import type { Device, NetworkInfo } from '../lib/types'
 import { COLORS, ICON_MAP, ICONS } from '../lib/types'
@@ -34,6 +34,17 @@ export default function DeviceForm({
   const isPortValid = Number(port) >= 1 && Number(port) <= 65535
   const isNameValid = name.trim().length > 0
   const isValid = isNameValid && isMacValid && isIpValid && isPortValid
+
+  useEffect(() => {
+    function handleBack(e: Event) {
+      if (isEditing || devices.length > 0) {
+        e.preventDefault()
+        onCancel()
+      }
+    }
+    window.addEventListener('android-back', handleBack)
+    return () => window.removeEventListener('android-back', handleBack)
+  }, [isEditing, devices.length, onCancel])
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()

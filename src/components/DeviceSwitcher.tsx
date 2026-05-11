@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Button, Drawer, useOverlayState } from '@heroui/react'
 import { Device, ICON_MAP } from '../lib/types'
 import { IoAdd } from 'react-icons/io5'
@@ -136,6 +137,17 @@ export default function DeviceSwitcher({
     useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 5 } }),
   )
 
+  useEffect(() => {
+    function handleBack(e: Event) {
+      if (state.isOpen) {
+        e.preventDefault()
+        state.close()
+      }
+    }
+    window.addEventListener('android-back', handleBack)
+    return () => window.removeEventListener('android-back', handleBack)
+  }, [state.isOpen, state.close])
+
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
     if (!over || active.id === over.id) return
@@ -197,9 +209,6 @@ export default function DeviceSwitcher({
                 </DndContext>
               </Drawer.Body>
               <Drawer.Footer className='mb-safe'>
-                <Button slot='close' variant='secondary'>
-                  Close
-                </Button>
                 <Button variant='primary' onClick={onAdd}>
                   <IoAdd />
                   Add Device
