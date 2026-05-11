@@ -76,31 +76,6 @@ jobs:
           VERSION="${{ github.event.inputs.version }}"
           sed -i 's/"version": "[^"]*"/"version": "'$VERSION'"/' src-tauri/tauri.conf.json
 
-      - name: Commit version bump
-        run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git add src-tauri/tauri.conf.json
-          git commit -m "bump version to ${{ github.event.inputs.version }}"
-          git push
-
-      - name: Generate release notes
-        id: generate_notes
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const { data } = await github.rest.repos.generateReleaseNotes({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag_name: 'v${{ github.event.inputs.version }}'
-            });
-            
-            const fs = require('fs');
-            fs.writeFileSync('./release_notes.md', data.body);
-            
-            console.log('Generated release notes:');
-            console.log(data.body);
-
       - name: Build APK
         run: pnpm tauri android build --apk --target aarch64
         env:
@@ -123,6 +98,38 @@ jobs:
             echo "Error: APK not found at $OLD_APK"
             exit 1
           fi
+
+      - name: Commit version bump
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add src-tauri/tauri.conf.json
+          git commit -m "bump version to ${{ github.event.inputs.version }}"
+          git push
+
+      - name: Get previous version
+        id: prev_version
+        run: |
+          PREV=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)
+          echo "version=$PREV" >> $GITHUB_OUTPUT
+
+      - name: Generate release notes
+        id: generate_notes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data } = await github.rest.repos.generateReleaseNotes({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: 'v${{ github.event.inputs.version }}'
+              previous_tag_name: '${{ steps.prev_version.outputs.version }}'
+            });
+            
+            const fs = require('fs');
+            fs.writeFileSync('./release_notes.md', data.body);
+            
+            console.log('Generated release notes:');
+            console.log(data.body);
 
       - name: Create release
         uses: softprops/action-gh-release@v1
