@@ -36,7 +36,7 @@ export default function App() {
       saveSelectedId(id)
       setScreen('power')
       toast(null, {
-        description: `Device "${devices.find(d => d.id === id)?.name ?? 'Unknown'}" selected`,
+        description: `Device "${devices.find(d => d.id === id)?.name ?? 'Unknown'}" selected.`,
         variant: 'success',
         timeout: 1500,
       })
@@ -113,9 +113,13 @@ export default function App() {
   if (selectedDevice) {
     return (
       <>
-        <Toast.Provider className='mb-safe'>
+        <Toast.Provider maxVisibleToasts={1} className='mb-safe'>
           {({ toast }) => (
-            <Toast toast={toast} variant={toast.content.variant}>
+            <Toast
+              toast={toast}
+              variant={toast.content.variant}
+              className='rounded-xl shadow-md border border-black/10'
+            >
               <Toast.Indicator variant={toast.content.variant} />
               <Toast.Content>
                 <Toast.Title>{toast.content.title}</Toast.Title>

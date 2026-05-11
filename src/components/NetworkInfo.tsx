@@ -3,7 +3,7 @@ import { Device } from '../lib/types'
 
 export default function NetworkInfo({ device }: { device: Device }) {
   return (
-    <div className='flex items-center gap-3 w-full p-3.5 rounded-xl bg-[#fafafa] shadow shadow-black/20'>
+    <div className='flex items-center gap-3 w-full p-3.5 rounded-xl bg-[#fafafa] shadow-md border border-black/10'>
       <div className='flex flex-col w-full'>
         <LuNetwork size={28} />
         <div className='grid grid-cols-2 gap-3 mt-3'>

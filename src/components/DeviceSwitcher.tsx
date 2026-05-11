@@ -52,12 +52,12 @@ function SortableDevice({
         zIndex: isDragging ? 10 : undefined,
         position: 'relative',
       }}
-      className={`flex items-center gap-3 p-3.5 rounded-xl bg-[#fafafa] shadow border-[1.5px] ${
+      className={`flex items-center gap-3 p-3.5 rounded-xl bg-[#fafafa] border-[1.5px] ${
         isDragging
           ? 'opacity-80 shadow-lg border-zinc-200'
           : device.id === selectedId
-            ? 'border-zinc-200'
-            : 'border-transparent'
+            ? 'border-blue-500'
+            : 'border-black/10'
       }`}
       onClick={() => {
         if (!isDragging) {
@@ -160,7 +160,7 @@ export default function DeviceSwitcher({
     <div>
       <Drawer>
         <div
-          className='flex items-center gap-3 w-full p-3.5 rounded-xl bg-[#fafafa] shadow shadow-black/20 active:bg-[#f7f7f7] active:scale-[0.98] transition-transform duration-100'
+          className='flex items-center gap-3 w-full p-3.5 rounded-xl bg-[#fafafa] shadow-md border border-black/10 active:bg-[#f7f7f7] active:scale-[0.98] transition-transform duration-100'
           onClick={() => state.open()}
         >
           <div className='flex justify-between w-full items-center'>
@@ -177,9 +177,17 @@ export default function DeviceSwitcher({
 
         <Drawer.Backdrop isOpen={state.isOpen} onOpenChange={state.setOpen}>
           <Drawer.Content placement='bottom'>
-            <Drawer.Dialog>
+            <Drawer.Dialog className='max-h-[72%]'>
               <Drawer.Header>
-                <Drawer.Heading>Devices</Drawer.Heading>
+                <Drawer.Heading>
+                  <div>
+                    <p>Select A Device</p>
+                    <p className='text-black/40 text-xs'>
+                      Drag devices to order them for widget display before adding the widget to your
+                      home screen.
+                    </p>
+                  </div>
+                </Drawer.Heading>
               </Drawer.Header>
               <Drawer.Body>
                 <DndContext
@@ -192,7 +200,7 @@ export default function DeviceSwitcher({
                     items={devices.map(d => d.id)}
                     strategy={verticalListSortingStrategy}
                   >
-                    <div className='flex flex-col gap-2'>
+                    <div className='flex flex-col gap-2 overflow-scroll'>
                       {devices.map(d => (
                         <SortableDevice
                           key={d.id}
