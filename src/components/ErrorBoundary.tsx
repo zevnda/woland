@@ -43,7 +43,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
         <div className='flex flex-col items-center justify-center min-h-screen gap-4 px-4 bg-white'>
           <div className='text-center w-full max-w-sm'>
             <h1 className='text-2xl font-bold text-zinc-900 mb-2'>Something went wrong</h1>
-            <p className='text-zinc-600 mb-4 break-words'>
+            <p className='text-zinc-600 mb-4 wrap-break-word'>
               An unexpected error occurred. Please try restarting the app.
             </p>
             {process.env.NODE_ENV === 'development' && this.state.error && (
