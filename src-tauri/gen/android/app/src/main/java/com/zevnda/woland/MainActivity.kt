@@ -19,15 +19,17 @@ class MainActivity : TauriActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        window.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(
-            android.graphics.Color.parseColor("#fafafa")
-        ))
+        window.setBackgroundDrawable(
+            android.graphics.drawable.ColorDrawable(
+                android.graphics.Color.parseColor("#fafafa"),
+            ),
+        )
 
         window.statusBarColor = Color.TRANSPARENT
         window.navigationBarColor = Color.parseColor("#fafafa")
 
         val controller = WindowInsetsControllerCompat(window, window.decorView)
-        controller.isAppearanceLightStatusBars = true
+        controller.isAppearanceLightStatusBars = false
         controller.isAppearanceLightNavigationBars = true
     }
 }

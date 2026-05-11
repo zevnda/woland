@@ -124,8 +124,10 @@ export default function DeviceForm({
   const errorClass = 'text-xs text-red-500 mt-0.5'
 
   return (
-    <main className='w-full h-dvh pt-safe pb-safe flex flex-col bg-[#fafafa] box-border'>
-      <div className='px-5 pt-5 pb-2 shrink-0'>
+    <main className='w-full h-dvh pb-safe flex flex-col bg-[#fafafa] box-border'>
+      <div className='w-full h-7.5 bg-[#33363b]' />
+
+      <div className='px-5 pt-3 pb-2 shrink-0'>
         {(isEditing || devices.length > 0) && <BackButton label='Back' onClick={onCancel} />}
         <p className='text-xl font-semibold m-0 mb-0'>{isEditing ? 'Edit Device' : 'Add Device'}</p>
       </div>

@@ -1,31 +1,42 @@
 package com.zevnda.woland
 
-import com.zevnda.woland.R
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
-import android.app.PendingIntent
+import com.zevnda.woland.R
 
 class WolWidget1x1 : AppWidgetProvider() {
-    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
-        appWidgetIds.forEach { updateWidget1x1(context, appWidgetManager, it) }
-    }
+  override fun onUpdate(
+    context: Context,
+    appWidgetManager: AppWidgetManager,
+    appWidgetIds: IntArray,
+  ) {
+    appWidgetIds.forEach { updateWidget1x1(context, appWidgetManager, it) }
+  }
 }
 
-fun updateWidget1x1(context: Context, appWidgetManager: AppWidgetManager, widgetId: Int) {
-    val rv = RemoteViews(context.packageName, R.layout.widget_layout_1x1)
+fun updateWidget1x1(
+  context: Context,
+  appWidgetManager: AppWidgetManager,
+  widgetId: Int,
+) {
+  val rv = RemoteViews(context.packageName, R.layout.widget_layout_1x1)
 
-    val serviceIntent = Intent(context, WolWidgetService1x1::class.java)
-    rv.setRemoteAdapter(R.id.widget_grid, serviceIntent)
+  val serviceIntent = Intent(context, WolWidgetService1x1::class.java)
+  rv.setRemoteAdapter(R.id.widget_grid, serviceIntent)
 
-    val tapIntent = Intent(context, WolBroadcastReceiver::class.java)
-    val tapPending = PendingIntent.getBroadcast(
-        context, 1, tapIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+  val tapIntent = Intent(context, WolBroadcastReceiver::class.java)
+  val tapPending =
+    PendingIntent.getBroadcast(
+      context,
+      1,
+      tapIntent,
+      PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE,
     )
-    rv.setPendingIntentTemplate(R.id.widget_grid, tapPending)
+  rv.setPendingIntentTemplate(R.id.widget_grid, tapPending)
 
-    appWidgetManager.updateAppWidget(widgetId, rv)
+  appWidgetManager.updateAppWidget(widgetId, rv)
 }
