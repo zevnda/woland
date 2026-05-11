@@ -30,16 +30,19 @@ export default function App() {
 
   const selectedDevice = devices.find(d => d.id === selectedId) || null
 
-  const handleSelectDevice = useCallback((id: string) => {
-    setSelectedId(id)
-    saveSelectedId(id)
-    setScreen('power')
-    toast(null, {
-      description: `Device "${devices.find(d => d.id === id)?.name ?? 'Unknown'}" selected`,
-      variant: 'success',
-      timeout: 1500,
-    })
-  }, [])
+  const handleSelectDevice = useCallback(
+    (id: string) => {
+      setSelectedId(id)
+      saveSelectedId(id)
+      setScreen('power')
+      toast(null, {
+        description: `Device "${devices.find(d => d.id === id)?.name ?? 'Unknown'}" selected`,
+        variant: 'success',
+        timeout: 1500,
+      })
+    },
+    [devices],
+  )
 
   const handleReorderDevices = useCallback((reordered: Device[]) => {
     setDevices(reordered)
