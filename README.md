@@ -21,11 +21,7 @@ Save and manage multiple devices, and instantly power on computers, consoles, se
 
 # Installation
 
-Download the latest ready-to-install APK from the **[releases page](https://github.com/zevnda/woland/releases)**
-
-# Build It Yourself
-
-Follow **[these steps](https://github.com/zevnda/woland/wiki/Build-It-Yourself)** to develop upon and build WoLAnd yourself
+Download the latest ready-to-install APK from the **[releases page](https://github.com/zevnda/woland/releases)** or follow **[these steps](https://github.com/zevnda/woland/wiki/Build-It-Yourself)** to develop upon and build WoLAnd yourself
 
 # Homescreen Widgets
 

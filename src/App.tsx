@@ -4,12 +4,27 @@ import { loadDevices, saveDevices, loadSelectedId, saveSelectedId } from './lib/
 import DeviceForm from './components/DeviceForm'
 import PowerScreen from './components/PowerScreen'
 import { Spinner, toast, Toast } from '@heroui/react'
+import Welcome from './components/Welcome'
 
 export default function App() {
   const [devices, setDevices] = useState<Device[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(loadSelectedId())
   const [screen, setScreen] = useState<Screen | null>(null)
   const [editingDevice, setEditingDevice] = useState<Device | null>(null)
+
+  // Handle viewport resizing to adjust for on-screen keyboard
+  useEffect(() => {
+    const viewport = window.visualViewport
+    if (!viewport) return
+
+    function handleResize() {
+      const keyboardHeight = window.innerHeight - viewport!.height
+      document.documentElement.style.setProperty('--keyboard-height', `${keyboardHeight}px`)
+    }
+
+    viewport.addEventListener('resize', handleResize)
+    return () => viewport.removeEventListener('resize', handleResize)
+  }, [])
 
   // Load devices from file on mount
   useEffect(() => {
@@ -23,7 +38,7 @@ export default function App() {
         saveSelectedId(loaded[0].id)
         setScreen('power')
       } else {
-        setScreen('form')
+        setScreen('power')
       }
     })
   }, [])
@@ -75,7 +90,7 @@ export default function App() {
         if (next.length === 0) {
           saveSelectedId(null)
           setSelectedId(null)
-          setScreen('form')
+          setScreen('power')
         } else if (selectedId === id) {
           const newSelected = next[0].id
           setSelectedId(newSelected)
@@ -108,6 +123,10 @@ export default function App() {
         }}
       />
     )
+  }
+
+  if (devices.length === 0) {
+    return <Welcome onAdd={() => setScreen('form')} />
   }
 
   if (selectedDevice) {

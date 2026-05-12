@@ -44,10 +44,8 @@ export default function DeviceForm({
 
   useEffect(() => {
     function handleBack(e: Event) {
-      if (isEditing || devices.length > 0) {
-        e.preventDefault()
-        onCancel()
-      }
+      e.preventDefault()
+      onCancel()
     }
     window.addEventListener('android-back', handleBack)
     return () => window.removeEventListener('android-back', handleBack)
@@ -169,13 +167,15 @@ export default function DeviceForm({
     <main className='w-full h-dvh pb-safe flex flex-col bg-bg box-border'>
       <div className='w-full h-7.5 bg-status' />
 
-      <div className='px-5 pt-3 pb-2 shrink-0'>
-        {(isEditing || devices.length > 0) && <BackButton label='Back' onClick={onCancel} />}
-        <p className='text-xl font-semibold m-0 mb-0'>{isEditing ? 'Edit Device' : 'Add Device'}</p>
+      <div className='px-5 pt-3 shrink-0'>
+        <BackButton label={isEditing ? 'Edit Device' : 'Add Device'} onClick={onCancel} />
       </div>
 
-      <div className='flex-1 overflow-y-auto px-5 pb-5 scroll-container'>
-        <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
+      <div
+        className='flex-1 overflow-y-auto px-5 pb-5 scroll-container'
+        style={{ paddingBottom: `calc(1.25rem + var(--keyboard-height))` }}
+      >
+        <form className='flex flex-col gap-8' onSubmit={handleSubmit}>
           <label className='flex flex-col gap-1.5'>
             <span className='text-xs font-medium text-black dark:text-white uppercase tracking-wide'>
               Name
@@ -246,6 +246,9 @@ export default function DeviceForm({
           <label className='flex flex-col gap-1.5'>
             <span className='text-xs font-medium text-black dark:text-white uppercase tracking-wide'>
               Device IPv4 (optional)
+            </span>
+            <span className='text-xs text-alt'>
+              Allows WoLAnd to check the device status after waking it up
             </span>
             <input
               className={`${inputClass} uppercase`}
