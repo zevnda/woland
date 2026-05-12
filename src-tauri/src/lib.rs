@@ -1,8 +1,9 @@
 use socket2::{Domain, Protocol, Socket, Type};
-use std::net::IpAddr;
-use std::net::SocketAddr;
+use std::net::{IpAddr, SocketAddr};
 use std::path::PathBuf;
 use tauri::Manager;
+use tokio::net::TcpStream;
+use tokio::time::{sleep, timeout, Duration};
 
 #[derive(serde::Serialize)]
 pub struct NetworkInfo {
@@ -14,25 +15,6 @@ pub struct NetworkInfo {
 
 fn devices_path(app: &tauri::AppHandle) -> PathBuf {
     app.path().app_data_dir().unwrap().join("devices.json")
-}
-
-#[tauri::command]
-fn save_devices(app: tauri::AppHandle, devices: String) -> Result<(), String> {
-    let path = devices_path(&app);
-    eprintln!("[SAVE_DEVICES] Writing to: {:?}", path);
-    std::fs::create_dir_all(path.parent().unwrap()).map_err(|e| e.to_string())?;
-    std::fs::write(&path, devices).map_err(|e| e.to_string())?;
-    eprintln!("[SAVE_DEVICES] Success");
-    Ok(())
-}
-
-#[tauri::command]
-fn load_devices(app: tauri::AppHandle) -> Result<String, String> {
-    let path = devices_path(&app);
-    if !path.exists() {
-        return Ok("[]".to_string());
-    }
-    std::fs::read_to_string(&path).map_err(|e| e.to_string())
 }
 
 /// Parse MAC address from string format
@@ -49,10 +31,65 @@ fn parse_mac_address(mac_str: &str) -> Result<[u8; 6], String> {
     Ok(mac)
 }
 
+#[tauri::command]
+async fn check_device_status(ip: String) -> bool {
+    println!("[CHECK_DEVICE] Polling {} for up to 10s...", ip);
+
+    let addr: SocketAddr = match format!("{}:445", ip).parse() {
+        Ok(a) => a,
+        Err(_) => return false,
+    };
+
+    for attempt in 1..=5 {
+        println!("[CHECK_DEVICE] Attempt {}/5 for {}", attempt, ip);
+
+        let result = timeout(Duration::from_millis(500), TcpStream::connect(addr)).await;
+
+        let online = match result {
+            // Connection succeeded — definitely online
+            Ok(Ok(_)) => true,
+            // Connection refused — device is online but port is closed
+            Ok(Err(e)) if e.kind() == std::io::ErrorKind::ConnectionRefused => true,
+            // Timed out or other error — device not reachable yet
+            _ => false,
+        };
+
+        if online {
+            println!("[CHECK_DEVICE] {} is online after {} attempts", ip, attempt);
+            return true;
+        }
+
+        sleep(Duration::from_secs(2)).await;
+    }
+
+    println!("[CHECK_DEVICE] {} did not come online within 10s", ip);
+    false
+}
+
+#[tauri::command]
+fn save_devices(app: tauri::AppHandle, devices: String) -> Result<(), String> {
+    let path = devices_path(&app);
+    println!("[SAVE_DEVICES] Writing to: {:?}", path);
+    std::fs::create_dir_all(path.parent().unwrap()).map_err(|e| e.to_string())?;
+    std::fs::write(&path, devices).map_err(|e| e.to_string())?;
+    println!("[SAVE_DEVICES] Success");
+    Ok(())
+}
+
+#[tauri::command]
+fn load_devices(app: tauri::AppHandle) -> Result<String, String> {
+    println!("[LOAD_DEVICES] Loading devices from file");
+    let path = devices_path(&app);
+    if !path.exists() {
+        return Ok("[]".to_string());
+    }
+    std::fs::read_to_string(&path).map_err(|e| e.to_string())
+}
+
 /// Send Wake-on-LAN packet
 #[tauri::command]
 fn send_wake_on_lan(mac: String, broadcast_addr: String, port: String) -> Result<String, String> {
-    eprintln!(
+    println!(
         "[WOL] MAC: {}, Broadcast: {}, Port: {}",
         mac, broadcast_addr, port
     );
@@ -131,7 +168,8 @@ pub fn run() {
             send_wake_on_lan,
             get_network_info,
             save_devices,
-            load_devices
+            load_devices,
+            check_device_status
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

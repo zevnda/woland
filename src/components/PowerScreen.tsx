@@ -34,11 +34,33 @@ export default function PowerScreen({
         broadcastAddr: device.ip,
         port: device.port,
       })
-      toast(null, {
-        description: 'Wake packet sent successfully!',
-        variant: 'success',
-        timeout: 1500,
-      })
+
+      if (device.ip4) {
+        const loadingId = toast(null, {
+          description: 'Wake packet sent...',
+          isLoading: true,
+          timeout: 0,
+        })
+
+        const online = await invoke<boolean>('check_device_status', {
+          ip: device.ip4,
+        })
+
+        toast.close(loadingId)
+        toast(null, {
+          description: online
+            ? 'Device is awake!'
+            : 'Wake packet sent, but device did not respond within 10s.',
+          variant: online ? 'success' : 'warning',
+          timeout: 1500,
+        })
+      } else {
+        toast(null, {
+          description: 'Wake packet sent!',
+          variant: 'success',
+          timeout: 1500,
+        })
+      }
     } catch (error) {
       console.error(error)
       toast(null, {

@@ -10,21 +10,25 @@ export default function NetworkInfo({ device }: { device: Device }) {
           {[
             { label: 'MAC Address', value: device.mac },
             { label: 'Broadcast IP', value: device.ip },
+            { label: 'Device IPv4', value: device.ip4 },
             ...(device.sourceIp ? [{ label: 'Source IP', value: device.sourceIp }] : []),
             ...(device.subnetMask ? [{ label: 'Subnet Mask', value: device.subnetMask }] : []),
             ...(device.gateway ? [{ label: 'Gateway', value: device.gateway }] : []),
             ...(device.interface ? [{ label: 'Interface', value: device.interface }] : []),
             { label: 'Port', value: device.port },
-          ].map(({ label, value }) => (
-            <div className='flex flex-col' key={label}>
-              <p className='text-black dark:text-white font-semibold text-sm'>{label}</p>
-              <p
-                className={`text-alt leading-4.5 text-sm font-mono ${label === 'MAC Address' ? 'uppercase' : ''}`}
-              >
-                {value}
-              </p>
-            </div>
-          ))}
+          ].map(({ label, value }) => {
+            if (!value) return null
+            return (
+              <div className='flex flex-col' key={label}>
+                <p className='text-black dark:text-white font-semibold text-sm'>{label}</p>
+                <p
+                  className={`text-alt leading-4.5 text-sm font-mono ${label === 'MAC Address' ? 'uppercase' : ''}`}
+                >
+                  {value}
+                </p>
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>

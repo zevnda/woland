@@ -3,7 +3,7 @@ import type { Device, Screen } from './lib/types'
 import { loadDevices, saveDevices, loadSelectedId, saveSelectedId } from './lib/storage'
 import DeviceForm from './components/DeviceForm'
 import PowerScreen from './components/PowerScreen'
-import { toast, Toast } from '@heroui/react'
+import { Spinner, toast, Toast } from '@heroui/react'
 
 export default function App() {
   const [devices, setDevices] = useState<Device[]>([])
@@ -114,19 +114,25 @@ export default function App() {
     return (
       <>
         <Toast.Provider maxVisibleToasts={1} className='mb-safe'>
-          {({ toast }) => (
-            <Toast
-              toast={toast}
-              variant={toast.content.variant}
-              className='rounded-xl bg-bg dark:bg-foreground shadow-md border border-border'
-            >
-              <Toast.Indicator variant={toast.content.variant} />
-              <Toast.Content>
-                <Toast.Title>{toast.content.title}</Toast.Title>
-                <Toast.Description>{toast.content.description}</Toast.Description>
-              </Toast.Content>
-            </Toast>
-          )}
+          {({ toast }) => {
+            return (
+              <Toast
+                toast={toast}
+                variant={toast.content.variant}
+                className='rounded-xl bg-bg dark:bg-foreground shadow-md border border-border'
+              >
+                {toast.content.isLoading ? (
+                  <Spinner size='sm' color='current' />
+                ) : (
+                  <Toast.Indicator variant={toast.content.variant} />
+                )}
+                <Toast.Content>
+                  <Toast.Title>{toast.content.title}</Toast.Title>
+                  <Toast.Description>{toast.content.description}</Toast.Description>
+                </Toast.Content>
+              </Toast>
+            )
+          }}
         </Toast.Provider>
         <PowerScreen
           device={selectedDevice}

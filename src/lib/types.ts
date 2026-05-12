@@ -4,7 +4,6 @@ import {
   LuTablet,
   LuRouter,
   LuPrinter,
-  LuTv,
   LuServer,
   LuLaptop,
   LuHardDrive,
@@ -16,7 +15,15 @@ import {
   LuNetwork,
   LuWifi,
 } from 'react-icons/lu'
-import { FaDesktop, FaApple, FaLinux, FaWindows, FaVideo, FaChromecast } from 'react-icons/fa6'
+import {
+  FaDesktop,
+  FaApple,
+  FaLinux,
+  FaWindows,
+  FaVideo,
+  FaChromecast,
+  FaTv,
+} from 'react-icons/fa6'
 import { TbDeviceNintendo, TbDeviceImac } from 'react-icons/tb'
 
 export interface Device {
@@ -26,6 +33,7 @@ export interface Device {
   icon: string
   mac: string
   ip: string
+  ip4?: string
   port: string
   // Auto-collected
   sourceIp?: string
@@ -92,7 +100,7 @@ export const ICONS = [
   'LuGamepad2',
   'TbDeviceNintendo',
   // Media & peripherals
-  'LuTv',
+  'FaTv',
   'FaVideo',
   'FaChromecast',
   'LuSpeaker',
@@ -120,7 +128,7 @@ export const ICON_MAP = {
   LuCpu,
   LuGamepad2,
   TbDeviceNintendo,
-  LuTv,
+  FaTv,
   FaVideo,
   FaChromecast,
   LuSpeaker,

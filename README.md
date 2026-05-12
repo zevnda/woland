@@ -25,7 +25,7 @@ Download the latest ready-to-install APK from the **[releases page](https://gith
 
 # Build It Yourself
 
-Follow the **[steps in the wiki](https://github.com/zevnda/woland/wiki#build-it-yourself)** to develop upon and build WoLAnd yourself
+Follow **[these steps](https://github.com/zevnda/woland/wiki/Build-It-Yourself)** to develop upon and build WoLAnd yourself
 
 # Homescreen Widgets
 
