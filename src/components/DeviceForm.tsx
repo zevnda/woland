@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { invoke } from '@tauri-apps/api/core'
 import type { Device, NetworkInfo } from '../lib/types'
 import { COLORS, ICON_MAP, ICONS } from '../lib/types'
@@ -51,8 +51,7 @@ export default function DeviceForm({
     return () => window.removeEventListener('android-back', handleBack)
   }, [isEditing, devices.length, onCancel])
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault()
+  function handleSubmit() {
     setTouched({ name: true, mac: true, ip: true, ip4: true, port: true })
     if (!isValid) return
 
@@ -168,14 +167,29 @@ export default function DeviceForm({
       <div className='w-full h-7.5 bg-status' />
 
       <div className='px-5 pt-3 shrink-0'>
-        <BackButton label={isEditing ? 'Edit Device' : 'Add Device'} onClick={onCancel} />
+        <BackButton
+          label={isEditing ? 'Edit Device' : 'Add Device'}
+          button={
+            <div>
+              <Button
+                variant='ghost'
+                className={`text-lg ${isValid && Object.values(touched).some(Boolean) ? 'text-accent' : ''}`}
+                onPress={handleSubmit}
+                isDisabled={!isValid && Object.values(touched).some(Boolean)}
+              >
+                {isEditing ? 'Save' : 'Add'}
+              </Button>
+            </div>
+          }
+          onCancel={onCancel}
+        />
       </div>
 
       <div
         className='flex-1 overflow-y-auto px-5 pb-5 scroll-container'
         style={{ paddingBottom: `calc(1.25rem + var(--keyboard-height))` }}
       >
-        <form className='flex flex-col gap-8' onSubmit={handleSubmit}>
+        <div className='flex flex-col gap-8'>
           <label className='flex flex-col gap-1.5'>
             <span className='text-xs font-medium text-black dark:text-white uppercase tracking-wide'>
               Name
@@ -247,8 +261,8 @@ export default function DeviceForm({
             <span className='text-xs font-medium text-black dark:text-white uppercase tracking-wide'>
               Device IPv4 (optional)
             </span>
-            <span className='text-xs text-alt'>
-              Allows WoLAnd to check the device status after waking it up
+            <span className='text-xs text-alt font-light'>
+              Allows WoLAnd to check the device's status after waking it up
             </span>
             <input
               className={`${inputClass} uppercase`}
@@ -265,13 +279,15 @@ export default function DeviceForm({
             <span className='text-xs font-medium text-black dark:text-white uppercase tracking-wide'>
               Color
             </span>
-            <div className='flex gap-3 flex-wrap py-1'>
+            <div className='flex gap-2.5 overflow-x-auto py-1 -mx-5 px-5'>
               {COLORS.map(c => (
                 <button
                   key={c}
                   type='button'
-                  className={`w-10 h-10 rounded-full border-[3px] cursor-pointer p-0 transition-all duration-100 ${
-                    c === color ? 'border-zinc-600 scale-110' : 'border-transparent active:scale-90'
+                  className={`shrink-0 rounded-full border-[2.5px] cursor-pointer p-3 transition-all duration-100 ${
+                    c === color
+                      ? 'border-border-dark scale-125'
+                      : 'border-transparent active:scale-90'
                   }`}
                   style={{ background: c }}
                   onClick={() => setColor(c)}
@@ -284,37 +300,27 @@ export default function DeviceForm({
             <span className='text-xs font-medium text-black dark:text-white uppercase tracking-wide'>
               Icon
             </span>
-            <div className='flex gap-2 overflow-x-auto py-1 -mx-5 px-5'>
+            <div className='flex gap-1 overflow-x-auto py-1 -mx-5 px-5'>
               {ICONS.map(i => {
                 const Icon = ICON_MAP[i]
                 return (
                   <button
                     key={i}
                     type='button'
-                    className={`shrink-0 rounded-2xl border-[2.5px] cursor-pointer p-3 transition-all duration-100 ${
+                    className={`shrink-0 rounded-full border-[2.5px] cursor-pointer p-1.5 transition-all duration-100 ${
                       i === icon
-                        ? 'border-zinc-600 scale-105'
+                        ? 'border-border-dark scale-115'
                         : 'border-transparent active:scale-90'
                     }`}
                     onClick={() => setIcon(i)}
                   >
-                    <Icon size={28} color={i === icon ? color : undefined} />
+                    <Icon size={28} className='text-black/70 dark:text-white/80' />
                   </button>
                 )
               })}
             </div>
           </div>
-
-          <Button
-            fullWidth
-            size='lg'
-            type='submit'
-            className='mt-4 mb-safe'
-            isDisabled={!isValid && Object.values(touched).some(Boolean)}
-          >
-            {isEditing ? 'Save Changes' : 'Add Device'}
-          </Button>
-        </form>
+        </div>
       </div>
     </main>
   )

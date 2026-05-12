@@ -1,13 +1,21 @@
 import { IoArrowBack } from 'react-icons/io5'
 
-export default function BackButton({ label, onClick }: { label: string; onClick: () => void }) {
+export default function BackButton({
+  label,
+  button,
+  onCancel,
+}: {
+  label: string
+  button?: React.ReactNode
+  onCancel: () => void
+}) {
   return (
-    <button
-      className='self-start mb-4 inline-flex items-center gap-1 bg-transparent border-none text-zinc-400 font-bold cursor-pointer p-0 active:text-white'
-      onClick={onClick}
-    >
-      <IoArrowBack size={26} className='text-blue-400' />
-      <p className='ml-4 text-lg'>{label}</p>
-    </button>
+    <div className='self-start mb-4 inline-flex items-center justify-between w-full gap-1 bg-transparent border-none font-bold cursor-pointer p-0 active:text-white'>
+      <IoArrowBack size={26} className='text-blue-400' onClick={onCancel} />
+      <p className='text-lg text-black dark:text-white absolute left-1/2 -translate-x-1/2'>
+        {label}
+      </p>
+      {button}
+    </div>
   )
 }

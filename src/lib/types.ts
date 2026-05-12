@@ -1,30 +1,21 @@
 import {
-  LuMonitor,
-  LuSmartphone,
-  LuTablet,
   LuRouter,
   LuPrinter,
   LuServer,
-  LuLaptop,
   LuHardDrive,
   LuCpu,
   LuGamepad2,
   LuCamera,
   LuSpeaker,
-  LuMonitorSpeaker,
   LuNetwork,
   LuWifi,
+  LuVideo,
 } from 'react-icons/lu'
-import {
-  FaDesktop,
-  FaApple,
-  FaLinux,
-  FaWindows,
-  FaVideo,
-  FaChromecast,
-  FaTv,
-} from 'react-icons/fa6'
-import { TbDeviceNintendo, TbDeviceImac } from 'react-icons/tb'
+import { FaChromecast, FaLaptop, FaComputer } from 'react-icons/fa6'
+import { TbDeviceNintendo, TbDeviceImac, TbBrandWindows } from 'react-icons/tb'
+import { FiTv } from 'react-icons/fi'
+import { MdMonitor, MdOutlinePhoneAndroid, MdOutlineTabletAndroid } from 'react-icons/md'
+import { AiOutlineApple, AiOutlineLinux } from 'react-icons/ai'
 
 export interface Device {
   id: string
@@ -55,39 +46,43 @@ export type Screen = 'power' | 'devices' | 'form'
 export const COLORS = [
   '#2373ea',
   '#0ea5e9',
+  '#06b6d4',
   '#6366f1',
-  '#e23c3c',
+  '#7c3aed',
+  '#9333ea',
+  '#a855f7',
   '#ea33ab',
   '#f43f5e',
-  '#2ea043',
-  '#16a34a',
-  '#84cc16',
+  '#e23c3c',
+  '#f97316',
   '#e28b2e',
   '#eab308',
-  '#f97316',
-  '#9333ea',
-  '#7c3aed',
-  '#a855f7',
+  '#84cc16',
+  '#16a34a',
+  '#2ea043',
   '#14b8a6',
-  '#06b6d4',
   '#0d9488',
   '#64748b',
   '#6b7280',
 ]
 
 export const ICONS = [
-  // Computers
-  'LuMonitor',
-  'LuLaptop',
-  'FaDesktop',
+  // Devices
+  'MdMonitor',
+  'FaLaptop',
+  'FaComputer',
+  'FiTv',
   'TbDeviceImac',
+  'MdOutlinePhoneAndroid',
+  'MdOutlineTabletAndroid',
+  'LuGamepad2',
+  'TbDeviceNintendo',
+  'LuPrinter',
+  'LuCamera',
   // OS-specific
-  'FaWindows',
-  'FaApple',
-  'FaLinux',
-  // Mobile
-  'LuSmartphone',
-  'LuTablet',
+  'TbBrandWindows',
+  'AiOutlineApple',
+  'AiOutlineLinux',
   // Networking
   'LuRouter',
   'LuNetwork',
@@ -96,43 +91,39 @@ export const ICONS = [
   'LuServer',
   'LuHardDrive',
   'LuCpu',
-  // Gaming
-  'LuGamepad2',
-  'TbDeviceNintendo',
   // Media & peripherals
-  'FaTv',
-  'FaVideo',
+  'LuVideo',
   'FaChromecast',
   'LuSpeaker',
-  'LuMonitorSpeaker',
-  // Other
-  'LuPrinter',
-  'LuCamera',
 ] as const
 
 export const ICON_MAP = {
-  LuMonitor,
-  LuLaptop,
-  FaDesktop,
+  // Devices
+  MdMonitor,
+  FaLaptop,
+  FaComputer,
   TbDeviceImac,
-  FaWindows,
-  FaApple,
-  FaLinux,
-  LuSmartphone,
-  LuTablet,
+  FiTv,
+  MdOutlinePhoneAndroid,
+  MdOutlineTabletAndroid,
+  LuGamepad2,
+  TbDeviceNintendo,
+  LuPrinter,
+  LuCamera,
+  // OS-specific
+  TbBrandWindows,
+  AiOutlineApple,
+  AiOutlineLinux,
+  // Networking
   LuRouter,
   LuNetwork,
   LuWifi,
+  // Servers & storage
   LuServer,
   LuHardDrive,
   LuCpu,
-  LuGamepad2,
-  TbDeviceNintendo,
-  FaTv,
-  FaVideo,
+  // Media & peripherals
+  LuVideo,
   FaChromecast,
   LuSpeaker,
-  LuMonitorSpeaker,
-  LuPrinter,
-  LuCamera,
 } as const

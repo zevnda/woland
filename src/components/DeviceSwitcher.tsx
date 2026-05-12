@@ -41,7 +41,7 @@ function SortableDevice({
     id: device.id,
   })
 
-  const Icon = ICON_MAP[device.icon as keyof typeof ICON_MAP] ?? ICON_MAP['LuMonitor']
+  const Icon = ICON_MAP[device.icon as keyof typeof ICON_MAP] ?? ICON_MAP['MdMonitor']
 
   return (
     <div
@@ -52,11 +52,11 @@ function SortableDevice({
         zIndex: isDragging ? 10 : undefined,
         position: 'relative',
       }}
-      className={`flex items-center gap-3 p-3.5 rounded-xl bg-bg dark:bg-foreground border-[1.5px] ${
+      className={`flex items-start gap-3 p-3.5 rounded-xl bg-bg dark:bg-foreground border-[1.5px] ${
         isDragging
           ? 'opacity-80 shadow-lg border-black/30 dark:border-white/30'
           : device.id === selectedId
-            ? 'border-ring'
+            ? 'border-accent'
             : 'border-border'
       }`}
       onClick={() => {
@@ -72,7 +72,7 @@ function SortableDevice({
         <div className='text-[0.95rem] font-medium text-black dark:text-white truncate'>
           {device.name}
         </div>
-        <div className='text-xs text-alt font-mono mt-0.5 uppercase'>{device.mac}</div>
+        <div className='text-xs text-alt font-mono mt uppercase'>{device.mac}</div>
       </div>
 
       <div className='flex items-center gap-0.5 shrink-0'>
@@ -132,7 +132,7 @@ export default function DeviceSwitcher({
 }) {
   const state = useOverlayState()
 
-  const Icon = ICON_MAP[device.icon as keyof typeof ICON_MAP] ?? ICON_MAP['LuMonitor']
+  const Icon = ICON_MAP[device.icon as keyof typeof ICON_MAP] ?? ICON_MAP['MdMonitor']
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -219,7 +219,7 @@ export default function DeviceSwitcher({
                 </DndContext>
               </Drawer.Body>
               <Drawer.Footer className='mb-safe'>
-                <Button variant='primary' onClick={onAdd}>
+                <Button variant='secondary' className='text-black dark:text-white' onClick={onAdd}>
                   <IoAdd />
                   Add Device
                 </Button>

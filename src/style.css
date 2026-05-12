@@ -6,8 +6,9 @@
   --color-foreground: #fafafa;
   --color-status: #c4c4c4;
   --color-border: #00000010;
+  --color-border-dark: #00000060;
   --color-alt: #00000060;
-  --color-ring: #3191ff;
+  --color-accent: #3191ff;
 }
 
 .dark {
@@ -15,8 +16,9 @@
   --color-foreground: #282828;
   --color-status: #161717;
   --color-border: #ffffff10;
+  --color-border-dark: #ffffff60;
   --color-alt: #ffffff70;
-  --color-ring: #51a2ff;
+  --color-accent: #78b7ff;
 }
 
 :root {
