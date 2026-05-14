@@ -69,11 +69,18 @@ class WolRemoteViewsFactory5x1(
     val rv = RemoteViews(context.packageName, R.layout.widget_device_cell_5x1)
     rv.setTextViewText(R.id.device_name, device.name)
 
+    val prefs = context.getSharedPreferences("widget_state", Context.MODE_PRIVATE)
+    val pressedId = prefs.getString("pressed_device_id", null)
+    val pressedAt = prefs.getLong("pressed_at", 0L)
+    val isPressed = pressedId == device.id && (System.currentTimeMillis() - pressedAt) < 1500
+    rv.setImageViewResource(R.id.device_power, if (isPressed) R.drawable.ic_check else R.drawable.ic_power)
+
     val fillIntent =
       Intent().apply {
         putExtra("device_mac", device.mac)
         putExtra("device_ip", device.ip)
         putExtra("device_port", device.port)
+        putExtra("device_id", device.id)
       }
     rv.setOnClickFillInIntent(R.id.device_power, fillIntent)
     return rv
