@@ -166,7 +166,7 @@ export default function DeviceForm({
         <div className='flex flex-col gap-8'>
           <label className='flex flex-col gap-1.5'>
             <span className='text-xs font-medium text-black dark:text-white uppercase tracking-wide'>
-              Name
+              Device Name
             </span>
             <input
               className={inputClass}
@@ -206,12 +206,14 @@ export default function DeviceForm({
                 className={inputClass}
                 type='text'
                 inputMode='decimal'
-                placeholder='192.168.1.255'
+                placeholder='192.168.1.10'
                 value={ip}
                 onChange={formatIp}
                 onBlur={() => setTouched(t => ({ ...t, ip: true }))}
               />
-              {touched.ip && !isIpValid && <span className={errorClass}>Invalid IP address</span>}
+              {touched.ip && !isIpValid && (
+                <span className={errorClass}>Invalid IP address (e.g. 192.168.1.10)</span>
+              )}
             </label>
 
             <label className='flex flex-col gap-1.5 w-20'>

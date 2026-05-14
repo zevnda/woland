@@ -121,13 +121,13 @@ export default function App() {
       toast(null, {
         description: 'Device list saved to your Downloads folder.',
         variant: 'success',
-        timeout: 2000,
+        timeout: 3000,
       })
     } else {
       toast(null, {
         description: 'Export failed. Please try again.',
         variant: 'danger',
-        timeout: 2000,
+        timeout: 3000,
       })
     }
   }, [devices])
@@ -139,7 +139,7 @@ export default function App() {
       toast(null, {
         description: 'No valid devices found in the selected file.',
         variant: 'danger',
-        timeout: 2000,
+        timeout: 3000,
       })
       return
     }
@@ -151,7 +151,7 @@ export default function App() {
     toast(null, {
       description: `Imported ${imported.length} device(s) successfully.`,
       variant: 'success',
-      timeout: 2000,
+      timeout: 3000,
     })
   }, [])
 
