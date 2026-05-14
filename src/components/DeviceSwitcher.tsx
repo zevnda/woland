@@ -3,6 +3,7 @@ import { Button, Drawer, useOverlayState } from '@heroui/react'
 import { Device, ICON_MAP } from '../lib/types'
 import { IoAdd } from 'react-icons/io5'
 import { FaCaretDown, FaRegEdit, FaRegTrashAlt } from 'react-icons/fa'
+import { LuDownload, LuUpload } from 'react-icons/lu'
 import { MdDragIndicator } from 'react-icons/md'
 import {
   DndContext,
@@ -120,6 +121,8 @@ export default function DeviceSwitcher({
   onEdit,
   onDelete,
   onReorder,
+  onExport,
+  onImport,
 }: {
   device: Device
   devices: Device[]
@@ -129,6 +132,8 @@ export default function DeviceSwitcher({
   onEdit: (device: Device) => void
   onDelete: (id: string) => void
   onReorder: (devices: Device[]) => void
+  onExport: () => void
+  onImport: () => void
 }) {
   const state = useOverlayState()
 
@@ -219,6 +224,28 @@ export default function DeviceSwitcher({
                 </DndContext>
               </Drawer.Body>
               <Drawer.Footer className='mb-safe'>
+                <Button
+                  variant='ghost'
+                  className='flex-1 text-alt'
+                  onClick={() => {
+                    state.close()
+                    onExport()
+                  }}
+                >
+                  <LuDownload size={16} />
+                  Export
+                </Button>
+                <Button
+                  variant='ghost'
+                  className='flex-1 text-alt'
+                  onClick={() => {
+                    state.close()
+                    onImport()
+                  }}
+                >
+                  <LuUpload size={16} />
+                  Import
+                </Button>
                 <Button variant='secondary' className='text-black dark:text-white' onClick={onAdd}>
                   <IoAdd />
                   Add Device

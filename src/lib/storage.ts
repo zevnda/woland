@@ -24,3 +24,29 @@ export function saveSelectedId(id: string | null) {
   if (id) localStorage.setItem(SELECTED_KEY, id)
   else localStorage.removeItem(SELECTED_KEY)
 }
+
+export async function exportDevices(devices: Device[]): Promise<string> {
+  const json = JSON.stringify(devices, null, 2)
+  const bridge = (window as any).FilesBridge
+  if (!bridge) return 'error: not supported on this platform'
+  return String(bridge.exportDevices(json))
+}
+
+export function importDevices(): Promise<Device[] | null> {
+  return new Promise(resolve => {
+    const bridge = (window as any).FilesBridge
+    if (!bridge) return resolve(null)
+    ;(window as any).__onDevicesImported = () => {
+      delete (window as any).__onDevicesImported
+      const json: string = bridge.getImportedJson() ?? ''
+      if (!json) return resolve(null)
+      try {
+        const parsed = JSON.parse(json)
+        resolve(Array.isArray(parsed) ? (parsed as Device[]) : null)
+      } catch {
+        resolve(null)
+      }
+    }
+    bridge.importDevices()
+  })
+}

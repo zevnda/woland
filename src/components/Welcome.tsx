@@ -1,8 +1,8 @@
 import { FaPowerOff } from 'react-icons/fa6'
-import { LuPlus, LuWifi, LuMonitor, LuSmartphone } from 'react-icons/lu'
+import { LuPlus, LuWifi, LuMonitor, LuSmartphone, LuUpload } from 'react-icons/lu'
 import { ThemeSwitch } from './ThemeSwitch'
 
-export default function Welcome({ onAdd }: { onAdd: () => void }) {
+export default function Welcome({ onAdd, onImport }: { onAdd: () => void; onImport: () => void }) {
   return (
     <main className='w-full h-dvh flex flex-col bg-bg'>
       {/* Hero */}
@@ -41,7 +41,7 @@ export default function Welcome({ onAdd }: { onAdd: () => void }) {
           </div>
 
           <h1 className='text-2xl font-bold text-white tracking-tight'>Welcome to WoLAnd</h1>
-          <p className='mt-1.5 text-sm text-white/70 font-medium text-center'>
+          <p className='mt-1.5 text-sm text-white/70 font-medium text-center uppercase'>
             Wake your devices with a single tap
           </p>
         </div>
@@ -69,22 +69,37 @@ export default function Welcome({ onAdd }: { onAdd: () => void }) {
         <div className='flex flex-col items-center text-center gap-2 mb-8'>
           <p className='text-lg font-semibold text-black dark:text-white'>Get Started</p>
           <p className='text-sm text-alt leading-relaxed max-w-70'>
-            You can add any device that supports Wake-on-LAN, such as PCs, servers, or smart home
-            hubs.
+            You can add any device that supports WoL such as computers, TVs, servers, and more.
           </p>
         </div>
 
-        <button
-          onClick={onAdd}
-          className='group flex items-center gap-3 w-full max-w-xs px-5 py-4 rounded-2xl bg-[#2373ea] active:scale-[0.97] transition-all duration-100 shadow-lg shadow-[#2373ea]/25'
-        >
-          <div className='w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0'>
-            <LuPlus className='text-white' size={20} />
-          </div>
-          <div className='text-left'>
-            <p className='text-white font-semibold text-[0.95rem]'>Add a Device</p>
-          </div>
-        </button>
+        <div className='flex flex-col gap-3 w-full'>
+          <button
+            onClick={onAdd}
+            className='group flex items-center gap-3 w-full max-w-xs px-5 py-4 rounded-2xl bg-[#2373ea] shadow-md'
+          >
+            <div className='w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0'>
+              <LuPlus className='text-white' size={20} />
+            </div>
+            <div className='text-left'>
+              <p className='text-white font-semibold text-[0.95rem]'>Add a Device</p>
+            </div>
+          </button>
+
+          <button
+            onClick={onImport}
+            className='group flex items-center gap-3 w-full max-w-xs px-5 py-4 rounded-2xl bg-bg dark:bg-foreground border border-border shadow-md'
+          >
+            <div className='w-10 h-10 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center shrink-0'>
+              <LuUpload className='text-alt' size={20} />
+            </div>
+            <div className='text-left'>
+              <p className='text-black dark:text-white font-semibold text-[0.95rem]'>
+                Import Device List
+              </p>
+            </div>
+          </button>
+        </div>
       </div>
     </main>
   )

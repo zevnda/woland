@@ -1,6 +1,13 @@
 import { useState, useEffect, useCallback } from 'react'
 import type { Device, Screen } from './lib/types'
-import { loadDevices, saveDevices, loadSelectedId, saveSelectedId } from './lib/storage'
+import {
+  loadDevices,
+  saveDevices,
+  loadSelectedId,
+  saveSelectedId,
+  exportDevices,
+  importDevices,
+} from './lib/storage'
 import DeviceForm from './components/DeviceForm'
 import PowerScreen from './components/PowerScreen'
 import { Spinner, toast, Toast } from '@heroui/react'
@@ -108,51 +115,102 @@ export default function App() {
     [selectedId],
   )
 
-  // Still loading
+  const handleExport = useCallback(async () => {
+    const result = await exportDevices(devices)
+    if (result === 'success') {
+      toast(null, {
+        description: 'Device list saved to your Downloads folder.',
+        variant: 'success',
+        timeout: 2000,
+      })
+    } else {
+      toast(null, {
+        description: 'Export failed. Please try again.',
+        variant: 'danger',
+        timeout: 2000,
+      })
+    }
+  }, [devices])
+
+  const handleImport = useCallback(async () => {
+    const imported = await importDevices()
+    if (imported === null) return
+    if (imported.length === 0) {
+      toast(null, {
+        description: 'No valid devices found in the selected file.',
+        variant: 'danger',
+        timeout: 2000,
+      })
+      return
+    }
+    setDevices(imported)
+    saveDevices(imported)
+    setSelectedId(imported[0].id)
+    saveSelectedId(imported[0].id)
+    setScreen('power')
+    toast(null, {
+      description: `Imported ${imported.length} device(s) successfully.`,
+      variant: 'success',
+      timeout: 2000,
+    })
+  }, [])
+
   if (screen === null) return null
+
+  const toastProvider = (
+    <Toast.Provider maxVisibleToasts={1} className='mb-safe'>
+      {({ toast }) => {
+        return (
+          <Toast
+            toast={toast}
+            variant={toast.content.variant}
+            className='rounded-xl bg-bg dark:bg-foreground shadow-md border border-border'
+          >
+            {toast.content.isLoading ? (
+              <Spinner size='sm' color='current' />
+            ) : (
+              <Toast.Indicator variant={toast.content.variant} />
+            )}
+            <Toast.Content>
+              <Toast.Title>{toast.content.title}</Toast.Title>
+              <Toast.Description>{toast.content.description}</Toast.Description>
+            </Toast.Content>
+          </Toast>
+        )
+      }}
+    </Toast.Provider>
+  )
 
   if (screen === 'form') {
     return (
-      <DeviceForm
-        devices={devices}
-        device={editingDevice}
-        onSave={handleSaveDevice}
-        onCancel={() => {
-          setEditingDevice(null)
-          setScreen('power')
-        }}
-      />
+      <>
+        {toastProvider}
+        <DeviceForm
+          devices={devices}
+          device={editingDevice}
+          onSave={handleSaveDevice}
+          onCancel={() => {
+            setEditingDevice(null)
+            setScreen('power')
+          }}
+        />
+      </>
     )
   }
 
   if (devices.length === 0) {
-    return <Welcome onAdd={() => setScreen('form')} />
+    return (
+      <>
+        {toastProvider}
+        <Welcome onAdd={() => setScreen('form')} onImport={handleImport} />
+      </>
+    )
   }
 
   if (selectedDevice) {
     return (
       <>
-        <Toast.Provider maxVisibleToasts={1} className='mb-safe'>
-          {({ toast }) => {
-            return (
-              <Toast
-                toast={toast}
-                variant={toast.content.variant}
-                className='rounded-xl bg-bg dark:bg-foreground shadow-md border border-border'
-              >
-                {toast.content.isLoading ? (
-                  <Spinner size='sm' color='current' />
-                ) : (
-                  <Toast.Indicator variant={toast.content.variant} />
-                )}
-                <Toast.Content>
-                  <Toast.Title>{toast.content.title}</Toast.Title>
-                  <Toast.Description>{toast.content.description}</Toast.Description>
-                </Toast.Content>
-              </Toast>
-            )
-          }}
-        </Toast.Provider>
+        {toastProvider}
         <PowerScreen
           device={selectedDevice}
           devices={devices}
@@ -168,6 +226,8 @@ export default function App() {
             setScreen('form')
           }}
           onDelete={handleDeleteDevice}
+          onExport={handleExport}
+          onImport={handleImport}
         />
       </>
     )

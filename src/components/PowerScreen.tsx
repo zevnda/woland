@@ -17,6 +17,8 @@ export default function PowerScreen({
   onAdd,
   onEdit,
   onDelete,
+  onExport,
+  onImport,
 }: {
   device: Device
   devices: Device[]
@@ -26,6 +28,8 @@ export default function PowerScreen({
   onAdd: () => void
   onEdit: (device: Device) => void
   onDelete: (id: string) => void
+  onExport: () => void
+  onImport: () => void
 }) {
   const [showCheck, setShowCheck] = useState(false)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -130,6 +134,8 @@ export default function PowerScreen({
           onEdit={onEdit}
           onDelete={onDelete}
           onReorder={onReorder}
+          onExport={onExport}
+          onImport={onImport}
         />
 
         {/* Network info */}
