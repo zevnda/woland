@@ -1,9 +1,9 @@
-import { useCallback } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { invoke } from '@tauri-apps/api/core'
 import type { Device } from '../lib/types'
 import DeviceSwitcher from './DeviceSwitcher'
 import { toast } from '@heroui/react'
-import { FaPowerOff } from 'react-icons/fa6'
+import { FaCheck, FaPowerOff } from 'react-icons/fa6'
 import NetworkInfo from './NetworkInfo'
 import { darken, transparentize } from 'color2k'
 import { ThemeSwitch } from './ThemeSwitch'
@@ -27,6 +27,9 @@ export default function PowerScreen({
   onEdit: (device: Device) => void
   onDelete: (id: string) => void
 }) {
+  const [showCheck, setShowCheck] = useState(false)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
   const handleSendWOL = useCallback(async () => {
     try {
       await invoke<string>('send_wake_on_lan', {
@@ -71,9 +74,22 @@ export default function PowerScreen({
           <div className='rounded-full p-2 mb-0 bg-[#ffffff26] dark:bg-[#00000026]'>
             <button
               className='w-32 h-32 rounded-full bg-bg dark:bg-[#1b1b1b] flex items-center justify-center border-[6px] border-white/25 dark:border-black/25 transition-transform duration-75 active:scale-95 active:opacity-80 shadow-lg shadow-black/20'
-              onClick={handleSendWOL}
+              onClick={() => {
+                if (timerRef.current) clearTimeout(timerRef.current)
+                setShowCheck(true)
+                timerRef.current = setTimeout(() => setShowCheck(false), 1500)
+                handleSendWOL()
+              }}
             >
-              <FaPowerOff className='text-7xl' style={{ color: device.color }} />
+              <div className='relative flex items-center justify-center w-full h-full'>
+                <FaPowerOff
+                  className={`text-7xl absolute transition-all duration-300 ${showCheck ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`}
+                  style={{ color: device.color }}
+                />
+                <FaCheck
+                  className={`text-success text-6xl absolute transition-all duration-300 ${showCheck ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
+                />
+              </div>
             </button>
           </div>
 
