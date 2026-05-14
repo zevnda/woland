@@ -65,7 +65,7 @@ export default function Welcome({ onAdd, onImport }: { onAdd: () => void; onImpo
       </div>
 
       {/* Content */}
-      <div className='flex-1 flex flex-col items-center px-6 pt-8'>
+      <div className='flex-1 flex flex-col items-center px-6 pt-8 w-full'>
         <div className='flex flex-col items-center text-center gap-2 mb-8'>
           <p className='text-lg font-semibold text-black dark:text-white'>Get Started</p>
           <p className='text-sm text-alt leading-relaxed max-w-70'>
@@ -76,7 +76,7 @@ export default function Welcome({ onAdd, onImport }: { onAdd: () => void; onImpo
         <div className='flex flex-col gap-3 w-full'>
           <button
             onClick={onAdd}
-            className='group flex items-center gap-3 w-full max-w-xs px-5 py-4 rounded-2xl bg-[#2373ea] shadow-md'
+            className='group flex items-center gap-3 w-full px-5 py-4 rounded-2xl bg-[#2373ea] shadow-md'
           >
             <div className='w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0'>
               <LuPlus className='text-white' size={20} />
@@ -88,7 +88,7 @@ export default function Welcome({ onAdd, onImport }: { onAdd: () => void; onImpo
 
           <button
             onClick={onImport}
-            className='group flex items-center gap-3 w-full max-w-xs px-5 py-4 rounded-2xl bg-bg dark:bg-foreground border border-border shadow-md'
+            className='group flex items-center gap-3 w-full px-5 py-4 rounded-2xl bg-bg dark:bg-foreground border border-border shadow-md'
           >
             <div className='w-10 h-10 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center shrink-0'>
               <LuUpload className='text-alt' size={20} />
