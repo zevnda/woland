@@ -16,7 +16,7 @@
       android:launchMode="singleTask"
       android:label="@string/main_activity_title"
       android:name=".MainActivity"
-      android:theme="@style/Theme.woland"
+      android:theme="@style/Theme.woland.Splash"
       android:exported="true"
       android:screenOrientation="portrait"
     >
@@ -41,44 +41,44 @@
     </provider>
 
     <receiver android:name=".WolWidget1x1" android:exported="true">
-        <intent-filter>
-            <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-        </intent-filter>
-        <meta-data
-            android:name="android.appwidget.provider"
-            android:resource="@xml/widget_info_1x1"/>
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+      </intent-filter>
+      <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/widget_info_1x1" />
     </receiver>
 
     <receiver android:name=".WolWidget3x1" android:exported="true">
-        <intent-filter>
-            <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-        </intent-filter>
-        <meta-data
-            android:name="android.appwidget.provider"
-            android:resource="@xml/widget_info_3x1"/>
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+      </intent-filter>
+      <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/widget_info_3x1" />
     </receiver>
 
     <receiver android:name=".WolWidget5x1" android:exported="true">
-        <intent-filter>
-            <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-        </intent-filter>
-        <meta-data
-            android:name="android.appwidget.provider"
-            android:resource="@xml/widget_info_5x1"/>
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+      </intent-filter>
+      <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/widget_info_5x1" />
     </receiver>
 
-    <receiver android:name=".WolBroadcastReceiver" android:exported="false"/>
+    <receiver android:name=".WolBroadcastReceiver" android:exported="false" />
 
     <service android:name=".WolWidgetService1x1"
-        android:permission="android.permission.BIND_REMOTEVIEWS"
-        android:exported="false"/>
+      android:permission="android.permission.BIND_REMOTEVIEWS"
+      android:exported="false" />
 
     <service android:name=".WolWidgetService3x1"
-        android:permission="android.permission.BIND_REMOTEVIEWS"
-        android:exported="false"/>
+      android:permission="android.permission.BIND_REMOTEVIEWS"
+      android:exported="false" />
 
     <service android:name=".WolWidgetService5x1"
-        android:permission="android.permission.BIND_REMOTEVIEWS"
-        android:exported="false"/>
+      android:permission="android.permission.BIND_REMOTEVIEWS"
+      android:exported="false" />
   </application>
 </manifest>

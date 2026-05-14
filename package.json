@@ -8,9 +8,10 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
+    "tad": "pnpm tauri android dev",
+    "tar": "pnpm tauri android run",
     "tab": "pnpm tauri android build --apk --target aarch64",
     "tabd": "pnpm tauri android build --apk --debug",
-    "tad": "pnpm tauri android dev",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

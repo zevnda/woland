@@ -6,6 +6,7 @@ import android.view.KeyEvent
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import androidx.activity.enableEdgeToEdge
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowInsetsControllerCompat
 
 class NavBarBridge(
@@ -27,12 +28,23 @@ class NavBarBridge(
 class MainActivity : TauriActivity() {
     private lateinit var wv: WebView
 
+    companion object {
+        private var coldStartCompleted = false
+    }
+
     override fun onWebViewCreate(webView: WebView) {
         wv = webView
         wv.addJavascriptInterface(NavBarBridge(this), "NavBarBridge")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (!coldStartCompleted) {
+            installSplashScreen().setKeepOnScreenCondition { false }
+            coldStartCompleted = true
+        } else {
+            setTheme(R.style.Theme_woland)
+        }
+
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
@@ -69,7 +81,7 @@ class MainActivity : TauriActivity() {
                 """.trimIndent(),
             ) { result ->
                 if (result == "\"unhandled\"") {
-                    finish()
+                    moveTaskToBack(true)
                 }
             }
             return true

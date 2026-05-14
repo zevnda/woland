@@ -3,4 +3,10 @@
   <style name="Theme.woland" parent="Theme.MaterialComponents.DayNight.NoActionBar">
     <!-- Customize your theme here. -->
   </style>
+
+  <style name="Theme.woland.Splash" parent="Theme.SplashScreen">
+    <item name="windowSplashScreenBackground">#fafafa</item>
+    <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+    <item name="postSplashScreenTheme">@style/Theme.woland</item>
+  </style>
 </resources>
