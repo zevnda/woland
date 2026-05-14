@@ -147,7 +147,7 @@ export default function DeviceForm({
             <div>
               <Button
                 variant='ghost'
-                className={`text-lg ${isValid && Object.values(touched).some(Boolean) ? 'text-accent' : ''}`}
+                className={`text-lg ${isValid ? 'text-accent' : ''}`}
                 onPress={handleSubmit}
                 isDisabled={!isValid && Object.values(touched).some(Boolean)}
               >
