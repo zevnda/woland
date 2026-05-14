@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
@@ -22,8 +23,10 @@ class WolBroadcastReceiver : BroadcastReceiver() {
         val deviceId = intent.getStringExtra("device_id") ?: return
 
         val appContext = context.applicationContext
+        val pendingResult = goAsync()
 
-        appContext.getSharedPreferences("widget_state", Context.MODE_PRIVATE)
+        appContext
+            .getSharedPreferences("widget_state", Context.MODE_PRIVATE)
             .edit()
             .putString("pressed_device_id", deviceId)
             .putLong("pressed_at", System.currentTimeMillis())
@@ -31,13 +34,14 @@ class WolBroadcastReceiver : BroadcastReceiver() {
         notifyWidgets(appContext)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            appContext.getSharedPreferences("widget_state", Context.MODE_PRIVATE)
+            appContext
+                .getSharedPreferences("widget_state", Context.MODE_PRIVATE)
                 .edit()
                 .remove("pressed_device_id")
                 .remove("pressed_at")
                 .apply()
             notifyWidgets(appContext)
-        }, 1500)
+        }, 2500)
 
         Thread {
             try {
@@ -47,8 +51,16 @@ class WolBroadcastReceiver : BroadcastReceiver() {
                 socket.broadcast = true
                 socket.send(DatagramPacket(packet, packet.size, InetAddress.getByName(ip), port))
                 socket.close()
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(appContext, "Wake packet sent!", Toast.LENGTH_SHORT).show()
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(appContext, "Failed to send packet", Toast.LENGTH_SHORT).show()
+                }
+            } finally {
+                pendingResult.finish()
             }
         }.start()
     }

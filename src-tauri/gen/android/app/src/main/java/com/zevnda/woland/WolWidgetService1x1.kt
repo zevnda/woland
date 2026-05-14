@@ -9,82 +9,82 @@ import org.json.JSONArray
 import java.io.File
 
 class WolWidgetService1x1 : RemoteViewsService() {
-  override fun onGetViewFactory(intent: Intent) = WolRemoteViewsFactory1x1(applicationContext)
+    override fun onGetViewFactory(intent: Intent) = WolRemoteViewsFactory1x1(applicationContext)
 }
 
 class WolRemoteViewsFactory1x1(
-  private val context: Context,
+    private val context: Context,
 ) : RemoteViewsService.RemoteViewsFactory {
-  private data class Device(
-    val id: String,
-    val name: String,
-    val mac: String,
-    val ip: String,
-    val port: String,
-  )
+    private data class Device(
+        val id: String,
+        val name: String,
+        val mac: String,
+        val ip: String,
+        val port: String,
+    )
 
-  private var devices = listOf<Device>()
+    private var devices = listOf<Device>()
 
-  override fun onCreate() {
-    loadDevices()
-  }
-
-  override fun onDataSetChanged() {
-    loadDevices()
-  }
-
-  override fun onDestroy() {}
-
-  override fun getCount() = minOf(devices.size, 1)
-
-  override fun getViewTypeCount() = 1
-
-  override fun getItemId(position: Int) = position.toLong()
-
-  override fun hasStableIds() = true
-
-  private fun loadDevices() {
-    try {
-      val file = File("/data/user/0/${context.packageName}/devices.json")
-      if (!file.exists()) return
-      val json = JSONArray(file.readText())
-      devices =
-        (0 until json.length()).map { i ->
-          val obj = json.getJSONObject(i)
-          Device(
-            id = obj.getString("id"),
-            name = obj.getString("name"),
-            mac = obj.getString("mac"),
-            ip = obj.getString("ip"),
-            port = obj.getString("port"),
-          )
-        }
-    } catch (e: Exception) {
-      devices = listOf()
+    override fun onCreate() {
+        loadDevices()
     }
-  }
 
-  override fun getViewAt(position: Int): RemoteViews {
-    val device = devices[position]
-    val rv = RemoteViews(context.packageName, R.layout.widget_device_cell_1x1)
-    rv.setTextViewText(R.id.device_name, device.name)
+    override fun onDataSetChanged() {
+        loadDevices()
+    }
 
-    val prefs = context.getSharedPreferences("widget_state", Context.MODE_PRIVATE)
-    val pressedId = prefs.getString("pressed_device_id", null)
-    val pressedAt = prefs.getLong("pressed_at", 0L)
-    val isPressed = pressedId == device.id && (System.currentTimeMillis() - pressedAt) < 1500
-    rv.setImageViewResource(R.id.device_power, if (isPressed) R.drawable.ic_check else R.drawable.ic_power)
+    override fun onDestroy() {}
 
-    val fillIntent =
-      Intent().apply {
-        putExtra("device_mac", device.mac)
-        putExtra("device_ip", device.ip)
-        putExtra("device_port", device.port)
-        putExtra("device_id", device.id)
-      }
-    rv.setOnClickFillInIntent(R.id.device_power, fillIntent)
-    return rv
-  }
+    override fun getCount() = minOf(devices.size, 1)
 
-  override fun getLoadingView() = null
+    override fun getViewTypeCount() = 1
+
+    override fun getItemId(position: Int) = position.toLong()
+
+    override fun hasStableIds() = true
+
+    private fun loadDevices() {
+        try {
+            val file = File("/data/user/0/${context.packageName}/devices.json")
+            if (!file.exists()) return
+            val json = JSONArray(file.readText())
+            devices =
+                (0 until json.length()).map { i ->
+                    val obj = json.getJSONObject(i)
+                    Device(
+                        id = obj.getString("id"),
+                        name = obj.getString("name"),
+                        mac = obj.getString("mac"),
+                        ip = obj.getString("ip"),
+                        port = obj.getString("port"),
+                    )
+                }
+        } catch (e: Exception) {
+            devices = listOf()
+        }
+    }
+
+    override fun getViewAt(position: Int): RemoteViews {
+        val device = devices[position]
+        val rv = RemoteViews(context.packageName, R.layout.widget_device_cell_1x1)
+        rv.setTextViewText(R.id.device_name, device.name)
+
+        val prefs = context.getSharedPreferences("widget_state", Context.MODE_PRIVATE)
+        val pressedId = prefs.getString("pressed_device_id", null)
+        val pressedAt = prefs.getLong("pressed_at", 0L)
+        val isPressed = pressedId == device.id && (System.currentTimeMillis() - pressedAt) < 2500
+        rv.setImageViewResource(R.id.device_power, if (isPressed) R.drawable.ic_check else R.drawable.ic_power)
+
+        val fillIntent =
+            Intent().apply {
+                putExtra("device_mac", device.mac)
+                putExtra("device_ip", device.ip)
+                putExtra("device_port", device.port)
+                putExtra("device_id", device.id)
+            }
+        rv.setOnClickFillInIntent(R.id.device_power, fillIntent)
+        return rv
+    }
+
+    override fun getLoadingView() = null
 }
