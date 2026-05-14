@@ -35,12 +35,7 @@ class MainActivity : TauriActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
-
-        var keepSplash = true
-        splashScreen.setKeepOnScreenCondition { keepSplash }
-        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-            keepSplash = false
-        }, 500)
+        splashScreen.setKeepOnScreenCondition { false }
 
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
