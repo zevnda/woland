@@ -22,7 +22,6 @@ export default function DeviceForm({
   const [name, setName] = useState(device?.name || '')
   const [mac, setMac] = useState(device?.mac || '')
   const [ip, setIp] = useState(device?.ip || '')
-  const [ip4, setIp4] = useState(device?.ip4 || '')
   const [port, setPort] = useState(device?.port || '9')
   const [color, setColor] = useState(device?.color || COLORS[0])
   const [icon, setIcon] = useState(device?.icon || ICONS[0])
@@ -30,7 +29,6 @@ export default function DeviceForm({
     name: false,
     mac: false,
     ip: false,
-    ip4: true,
     port: false,
   })
 
@@ -52,7 +50,7 @@ export default function DeviceForm({
   }, [isEditing, devices.length, onCancel])
 
   function handleSubmit() {
-    setTouched({ name: true, mac: true, ip: true, ip4: true, port: true })
+    setTouched({ name: true, mac: true, ip: true, port: true })
     if (!isValid) return
 
     invoke<NetworkInfo>('get_network_info')
@@ -62,7 +60,6 @@ export default function DeviceForm({
           name: name.trim(),
           mac: mac.trim(),
           ip: ip.trim(),
-          ip4: ip4.trim() || undefined,
           port: port.trim(),
           color,
           icon,
@@ -80,7 +77,6 @@ export default function DeviceForm({
           name: name.trim(),
           mac: mac.trim(),
           ip: ip.trim(),
-          ip4: ip4.trim() || undefined,
           port: port.trim(),
           color,
           icon,
@@ -125,28 +121,6 @@ export default function DeviceForm({
       setIp(formatted + '.')
     } else {
       setIp(formatted)
-    }
-  }
-
-  function formatIp4(e: React.ChangeEvent<HTMLInputElement>) {
-    const raw = e.target.value.replace(/[^0-9.]/g, '')
-    const parts = raw.split('.')
-    const isDeleting = e.target.value.length < ip4.length
-
-    const clamped = parts.slice(0, 4).map(part => {
-      const sliced = part.slice(0, 3)
-      const num = parseInt(sliced, 10)
-      if (!isNaN(num) && num > 255) return '255'
-      return sliced
-    })
-
-    const formatted = clamped.join('.')
-
-    const lastPart = clamped[clamped.length - 1]
-    if (!isDeleting && lastPart?.length === 3 && clamped.length < 4 && !formatted.endsWith('.')) {
-      setIp4(formatted + '.')
-    } else {
-      setIp4(formatted)
     }
   }
 
@@ -256,24 +230,6 @@ export default function DeviceForm({
               {touched.port && !isPortValid && <span className={errorClass}>1–65535</span>}
             </label>
           </div>
-
-          <label className='flex flex-col gap-1.5'>
-            <span className='text-xs font-medium text-black dark:text-white uppercase tracking-wide'>
-              Device IPv4 (optional)
-            </span>
-            <span className='text-xs text-alt font-light'>
-              Allows WoLAnd to check the device's status after waking it up
-            </span>
-            <input
-              className={`${inputClass} uppercase`}
-              type='text'
-              inputMode='decimal'
-              placeholder='192.168.1.100'
-              value={ip4}
-              onChange={formatIp4}
-              onBlur={() => setTouched(t => ({ ...t, ip4: true }))}
-            />
-          </label>
 
           <div className='flex flex-col gap-2'>
             <span className='text-xs font-medium text-black dark:text-white uppercase tracking-wide'>

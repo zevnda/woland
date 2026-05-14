@@ -10,7 +10,6 @@ export default function NetworkInfo({ device }: { device: Device }) {
           {[
             { label: 'MAC Address', value: device.mac },
             { label: 'Broadcast IP', value: device.ip },
-            { label: 'Device IPv4', value: device.ip4 },
             ...(device.sourceIp ? [{ label: 'Source IP', value: device.sourceIp }] : []),
             ...(device.subnetMask ? [{ label: 'Subnet Mask', value: device.subnetMask }] : []),
             ...(device.gateway ? [{ label: 'Gateway', value: device.gateway }] : []),

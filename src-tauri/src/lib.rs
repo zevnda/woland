@@ -2,8 +2,6 @@ use socket2::{Domain, Protocol, Socket, Type};
 use std::net::{IpAddr, SocketAddr};
 use std::path::PathBuf;
 use tauri::Manager;
-use tokio::net::TcpStream;
-use tokio::time::{sleep, timeout, Duration};
 
 #[derive(serde::Serialize)]
 pub struct NetworkInfo {
@@ -29,41 +27,6 @@ fn parse_mac_address(mac_str: &str) -> Result<[u8; 6], String> {
         mac[i] = u8::from_str_radix(part, 16).map_err(|e| format!("Invalid MAC byte: {}", e))?;
     }
     Ok(mac)
-}
-
-#[tauri::command]
-async fn check_device_status(ip: String) -> bool {
-    println!("[CHECK_DEVICE] Polling {} for up to 10s...", ip);
-
-    let addr: SocketAddr = match format!("{}:445", ip).parse() {
-        Ok(a) => a,
-        Err(_) => return false,
-    };
-
-    for attempt in 1..=5 {
-        println!("[CHECK_DEVICE] Attempt {}/5 for {}", attempt, ip);
-
-        let result = timeout(Duration::from_millis(500), TcpStream::connect(addr)).await;
-
-        let online = match result {
-            // Connection succeeded — definitely online
-            Ok(Ok(_)) => true,
-            // Connection refused — device is online but port is closed
-            Ok(Err(e)) if e.kind() == std::io::ErrorKind::ConnectionRefused => true,
-            // Timed out or other error — device not reachable yet
-            _ => false,
-        };
-
-        if online {
-            println!("[CHECK_DEVICE] {} is online after {} attempts", ip, attempt);
-            return true;
-        }
-
-        sleep(Duration::from_secs(2)).await;
-    }
-
-    println!("[CHECK_DEVICE] {} did not come online within 10s", ip);
-    false
 }
 
 #[tauri::command]
@@ -168,8 +131,7 @@ pub fn run() {
             send_wake_on_lan,
             get_network_info,
             save_devices,
-            load_devices,
-            check_device_status
+            load_devices
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -24,7 +24,6 @@ export interface Device {
   icon: string
   mac: string
   ip: string
-  ip4?: string
   port: string
   // Auto-collected
   sourceIp?: string
